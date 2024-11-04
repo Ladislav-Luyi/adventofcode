@@ -3,6 +3,7 @@ package org.example;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,24 +11,19 @@ import java.util.regex.Pattern;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        // too high 22142214
+        // part1 222870
+        // part2 117936
         List<Ingredient> list = Arrays.stream(input.split("\n"))
                 .map(Main::make)
                 .toList();
-        list.forEach(System.out::println);
         Recipe recipe = new Recipe(list);
         RecipeOptimizer recipeOptimizer = new RecipeOptimizer(recipe);
-
-        System.out.println( recipeOptimizer.apply());
-
-
+        // part1
+        Predicate<Result> allCalories =  result -> true;
+        System.out.println( recipeOptimizer.apply(allCalories));
+        // part2
+        System.out.println( recipeOptimizer.apply(result -> result.calories() == 500));
     }
-
-
-//    static String input = """
-//            Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
-//            Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3
-//                        """;
 
     static String input = """
 Sugar: capacity 3, durability 0, flavor 0, texture -3, calories 2

@@ -13,57 +13,28 @@ public class Ingredient {
         this.calories = calories;
     }
 
-    public Ingredient() {
-    }
-
-
 
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getCapacity() {
         return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public int getDurability() {
         return durability;
     }
 
-    public void setDurability(int durability) {
-        this.durability = durability;
-    }
-
     public int getFlavor() {
         return flavor;
-    }
-
-    public void setFlavor(int flavor) {
-        this.flavor = flavor;
     }
 
     public int getTexture() {
         return texture;
     }
 
-    public void setTexture(int texture) {
-        this.texture = texture;
-    }
-
     public int getCalories() {
         return calories;
-    }
-
-    public void setCalories(int calories) {
-        this.calories = calories;
     }
 
     @Override

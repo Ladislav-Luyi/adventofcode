@@ -1,10 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Recipe {
     private List<Ingredient> ingredients = new ArrayList<>();
@@ -13,17 +10,15 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public Recipe() {
-    }
 
     // TODO refactor to return also array before reducment
-    public Integer calculateCalories(Integer... spoons){
+    public Result calculateCalories(Integer... spoons){
         if (spoons.length != ingredients.size()){
             throw new RuntimeException("more spoons than ingredients");
         }
         List<List<Integer>> l = new ArrayList<>();
-//        List<Integer> calList = ingredients.stream().map(Ingredient::getCalories).toList();
-//        l.add(calList);
+        List<Integer> calList = ingredients.stream().map(Ingredient::getCalories).toList();
+
         List<Integer> capList = ingredients.stream().map(Ingredient::getCapacity).toList();
         l.add(capList);
         List<Integer> durList = ingredients.stream().map(Ingredient::getDurability).toList();
@@ -32,6 +27,12 @@ public class Recipe {
         l.add(flaList);
         List<Integer> textList = ingredients.stream().map(Ingredient::getTexture).toList();
         l.add(textList);
+
+        int callories = 0;
+        for(int i = 0; i < calList.size(); i++){
+                callories += calList.get(i) * spoons[i];
+        }
+
 
         // todo adjust it to use spoons lenght
         List<Integer> sums = new ArrayList<>();
@@ -42,27 +43,16 @@ public class Recipe {
             }
             sums.add(r1);
         }
-        System.out.println("from recipe " + sums);
-        // handle minus values -> if minus return 0
-        // todo is this correct??
+
         List<Integer> list = sums.stream().filter(integer -> integer < 0).toList();
         if (!list.isEmpty()){
-            return 0;
+            return new Result(0, 0);
         }
-
-        return sums.stream()
+        Integer i = sums.stream()
                 .reduce((integer, integer2) -> integer * integer2)
                 .orElseThrow();
+        return new Result(i, callories);
     }
-    void addIngredient(Ingredient i){
-        ingredients.add(i);
-    }
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-
 
     @Override
     public String toString() {
