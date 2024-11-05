@@ -40,7 +40,6 @@ public class RecipeOptimizer {
 //    }
 
     private static List<List<Integer>> getLists() {
-//        List<List<Integer>>  list = new ArrayList<>();
         int numElements = 4; // Number of elements in each combination
         int maxVal = 100; // Maximum value for each element
         int targetSum = 100; // Desired sum
