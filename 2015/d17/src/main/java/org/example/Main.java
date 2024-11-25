@@ -13,6 +13,7 @@ public class Main {
 
     static List<List<Integer>> listList = new ArrayList<>();
 
+
     public static void main(String[] args) {
         List<Integer> input = List.of(11, 30, 47, 31, 32, 36, 3, 1, 5, 3, 32, 36, 15, 11, 46, 26, 28, 1, 19, 3);
         combination(input, new ArrayList<>(), 0, 150);
@@ -24,8 +25,8 @@ public class Main {
         Integer numberOfElementsMatchingMinSize = listList.stream()
                 .map(List::size)
                 .filter(size -> size.equals(minSizeOfValues))
-                .findFirst()
-                .orElseThrow();
+                .toList()
+                .size();
         System.out.println("combinations of min values " + numberOfElementsMatchingMinSize);
     }
 
