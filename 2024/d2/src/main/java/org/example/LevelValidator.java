@@ -12,8 +12,7 @@ public class LevelValidator {
     }
 
     public Report validateLevels(List<Integer> list) {
-        boolean isSafe = true;
-        int errorCount = 0;
+        ReportState reportState = ReportState.SAFE;
         int errorIndex = -1;
         for (int i = 1; i < list.size(); i++){
             Integer i1 = list.get(i);
@@ -21,21 +20,18 @@ public class LevelValidator {
             int r = i1 - i2;
             // assign direction
             if (!validateDirection(r)){
-                isSafe = false;
-                errorCount++;
+                reportState = ReportState.UNSAFE;
                 errorIndex = i;
+                break;
             }
             if (Math.abs(r) < min ||
                 Math.abs(r) > max ){
-                isSafe = false;
-                errorCount++;
+                reportState = ReportState.UNSAFE;
                 errorIndex = i;
+                break;
             }
         }
-        System.out.println(errorCount);
-        boolean isFixable = errorCount == 0;
-
-        return new Report(isSafe, isFixable, errorIndex, list);
+        return new Report(reportState, errorIndex, list);
     }
 
     private boolean validateDirection(int r) {
@@ -67,6 +63,8 @@ public class LevelValidator {
     public static void main(String[] args) {
         Report report = new LevelValidator(1, 3).validateLevels(List.of(1, 3, 2, 4, 5));
         System.out.println(report);
+        Report report1 = new LevelValidator(1, 3).validateLevels(List.of(8, 6, 4, 4, 1));
+        System.out.println(report1);
     }
 
 
