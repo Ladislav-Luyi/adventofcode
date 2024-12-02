@@ -1011,11 +1011,20 @@ public class Main {
 93 91 90 89 86 85 82 80
             """;
 
+    static String testInput = """
+            7 6 4 2 1
+            1 2 7 8 9
+            9 7 6 2 1
+            1 3 2 4 5
+            8 6 4 4 1
+            1 3 6 7 9
+            """;
+
     public static void main(String[] args) {
 
 
 //        part1();
-        part2(); // 644 too low
+        part2(); // 644 too low, 662 too low
 
 
     }
@@ -1037,7 +1046,7 @@ public class Main {
                 if (rerunReport.reportState().equals(ReportState.SAFE) &&
                     report.errorIndex() < reportList.size()
                     &&
-                    reportList.get(report.errorIndex() - 1).reportState().equals( ReportState.UNSAFE )
+                    ! reportList.get(report.errorIndex() - 1).reportState().equals( ReportState.SAFE )
                     ){
                     reportList.get(report.errorIndex() - 1).setReportState(ReportState.REMOVE);
                     report = rerunReport;
