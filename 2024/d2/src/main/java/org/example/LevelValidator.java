@@ -13,7 +13,6 @@ public class LevelValidator {
 
     public Report validateLevels(List<Integer> list) {
         boolean reportState = true;
-        int errorIndex = -1;
         for (int i = 1; i < list.size(); i++){
             Integer i1 = list.get(i);
             Integer i2 = list.get(i - 1);
@@ -21,17 +20,15 @@ public class LevelValidator {
             // assign direction
             if (!validateDirection(r)){
                 reportState = false;
-                errorIndex = i;
                 break;
             }
             if (Math.abs(r) < min ||
                 Math.abs(r) > max ){
                 reportState = false;
-                errorIndex = i;
                 break;
             }
         }
-        return new Report(reportState, errorIndex, list);
+        return new Report(reportState, list);
     }
 
     private boolean validateDirection(int r) {
@@ -48,7 +45,6 @@ public class LevelValidator {
     }
 
     private DIRECTION getCurrentDirection(int r) {
-        // todo is equal important??
         if (r < 0) {
             plusMinus = DIRECTION.MINUS;
         } else {
@@ -58,14 +54,6 @@ public class LevelValidator {
     }
 
     enum DIRECTION {PLUS, MINUS}
-
-
-    public static void main(String[] args) {
-        Report report = new LevelValidator(1, 3).validateLevels(List.of(1, 3, 2, 4, 5));
-        System.out.println(report);
-        Report report1 = new LevelValidator(1, 3).validateLevels(List.of(9, 1, 12, 13, 14)); // increasing
-        System.out.println(report1);
-    }
 
 
 }

@@ -1021,8 +1021,8 @@ public class Main {
             """;
 
     public static void main(String[] args) {
-//        part1();
-        part2(); // 644 too low, 662 too low, 663 too low
+        part1();
+        part2();
     }
 
     private static void part2() {
@@ -1034,27 +1034,27 @@ public class Main {
             Report report = new LevelValidator(1, 3).validateLevels(list);
 
             if (!report.isSafe()) {
-                System.out.println("error " + report);
-                ArrayList<Integer> newList = new ArrayList<>(report.levels());
-                newList.remove(report.errorIndex() - 1);
-                Report rerunReport = new LevelValidator(1, 3).validateLevels(newList);
-                // it means that there was only one mistake
-                if (rerunReport.isSafe()) {
-                    report = rerunReport;
+                List<Integer> levels = report.levels();
+                for (int j = 0, levelsSize = levels.size(); j < levelsSize; j++) {
+                    ArrayList<Integer> newList = new ArrayList<>(report.levels());
+                    newList.remove(j);
+                    Report rerunReport = new LevelValidator(1, 3).validateLevels(newList);
+                    if (rerunReport.isSafe()) {
+                        report = rerunReport;
+                        break;
+                    }
                 }
             }
             reportList.add(report);
         }
-//        System.out.println(reportList);
         long count = reportList.stream()
-                .peek(System.out::println)
                 .filter(Report::isSafe)
                 .count();
         System.out.println(count);
     }
 
     private static void parseList(List<List<Integer>> lists) {
-        for (String e : testInput.split("\n")) {
+        for (String e : input.split("\n")) {
             List<Integer> list = new ArrayList<>();
             for (String s : e.split(" ")) {
                 list.add(Integer.valueOf(s));
@@ -1069,7 +1069,6 @@ public class Main {
 
         long count = lists.stream()
                 .map(e -> new LevelValidator(1, 3).validateLevels(e))
-                .peek(System.out::println)
                 .filter(e -> e.isSafe())
                 .count();
         System.out.println(count);
