@@ -12,7 +12,7 @@ public class LevelValidator {
     }
 
     public Report validateLevels(List<Integer> list) {
-        ReportState reportState = ReportState.SAFE;
+        boolean reportState = true;
         int errorIndex = -1;
         for (int i = 1; i < list.size(); i++){
             Integer i1 = list.get(i);
@@ -20,13 +20,13 @@ public class LevelValidator {
             int r = i1 - i2;
             // assign direction
             if (!validateDirection(r)){
-                reportState = ReportState.UNSAFE;
+                reportState = false;
                 errorIndex = i;
                 break;
             }
             if (Math.abs(r) < min ||
                 Math.abs(r) > max ){
-                reportState = ReportState.UNSAFE;
+                reportState = false;
                 errorIndex = i;
                 break;
             }
