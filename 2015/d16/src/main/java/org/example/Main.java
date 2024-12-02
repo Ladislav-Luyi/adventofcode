@@ -551,7 +551,7 @@ public class Main {
                 .filter(aunt -> isMinusOne(aunt.getVizslas()) || reference.getVizslas() == aunt.getVizslas())
                 .filter(aunt -> isMinusOne(aunt.getCars()) || reference.getCars() == aunt.getCars())
                 .filter(aunt -> isMinusOne(aunt.getPerfumes()) || reference.getPerfumes() == aunt.getPerfumes())
-                .filter(aunt -> aunt.getNumberOfUnknown() != 10)
+//                .filter(aunt -> aunt.getNumberOfUnknown() != 10)
 //                .min(Comparator.comparing(Aunt::getNumberOfUnknown)).stream() // part1
 //                .max(Comparator.comparing(Aunt::countRelevant)).stream() // part2
                 .toList();
