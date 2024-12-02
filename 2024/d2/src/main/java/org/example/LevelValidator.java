@@ -63,7 +63,7 @@ public class LevelValidator {
     public static void main(String[] args) {
         Report report = new LevelValidator(1, 3).validateLevels(List.of(1, 3, 2, 4, 5));
         System.out.println(report);
-        Report report1 = new LevelValidator(1, 3).validateLevels(List.of(8, 6, 4, 4, 1));
+        Report report1 = new LevelValidator(1, 3).validateLevels(List.of(9, 1, 12, 13, 14)); // increasing
         System.out.println(report1);
     }
 

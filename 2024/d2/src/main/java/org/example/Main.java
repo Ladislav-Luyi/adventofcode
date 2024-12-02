@@ -1054,7 +1054,7 @@ public class Main {
     }
 
     private static void parseList(List<List<Integer>> lists) {
-        for (String e : input.split("\n")) {
+        for (String e : testInput.split("\n")) {
             List<Integer> list = new ArrayList<>();
             for (String s : e.split(" ")) {
                 list.add(Integer.valueOf(s));
