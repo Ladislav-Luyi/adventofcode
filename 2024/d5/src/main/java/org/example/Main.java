@@ -2,6 +2,7 @@ package org.example;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -48,12 +49,82 @@ public class Main {
             int after  = Integer.parseInt(split[1]);
             rulesMap.merge(before, new HashSet<>(Set.of(after)),(integers, integers2) -> { integers.addAll(integers2);return integers; }  );
         }
+//        showRuleMap(rulesMap);
+//        part1(rulesMap);
+        part2(rulesMap);
+
+    }
+
+    private static void showRuleMap(HashMap<Integer, Set<Integer>> rulesMap) {
         for (Map.Entry<Integer, Set<Integer>> entry : rulesMap.entrySet()) {
             System.out.println( "key " +  entry.getKey() );
             entry.getValue().forEach(e -> System.out.print(e + " "));
             System.out.println();
         }
+    }
 
+    private static void part2(HashMap<Integer, Set<Integer>> rulesMap) {
+        String[] split = pageInput.split("\n");
+        ArrayList<String> r = new ArrayList<>();
+
+        Set<Integer> canContain = null;
+        for (String s : split) {
+            String[] numbers = s.split(",");
+            if (isValid(s, numbers, canContain, rulesMap)){
+                r.add(s);
+            }else{
+                // find relevant rules
+                HashMap<Integer, Set<Integer>> relevantRules = new HashMap<>();
+                List<Integer> numberList = Arrays.stream(numbers).map(Integer::parseInt).collect(Collectors.toList());
+
+                for (Integer number : numberList) {
+                    for (Map.Entry<Integer, Set<Integer>> setEntry : rulesMap.entrySet()) {
+                        if (setEntry.getValue().contains(number) && numberList.contains(setEntry.getKey())){
+                            relevantRules.put(
+                                    setEntry.getKey(),
+                                    setEntry.getValue()
+                            );
+                        }
+                    }
+                }
+                System.out.println("for numbers " + Arrays.toString(numbers));
+                showRuleMap(relevantRules);
+                // find first key from relevant rules
+                int firstKey = -1;
+                for (Map.Entry<Integer, Set<Integer>> entry : relevantRules.entrySet()) {
+                    Integer key = entry.getKey();
+                    boolean isFirstKey = true;
+                    for (Map.Entry<Integer, Set<Integer>> setEntry : relevantRules.entrySet()) {
+                        if (setEntry.getValue().contains(key)){
+                            isFirstKey = false;
+                        }
+                    }
+                    if (isFirstKey){
+                        firstKey = key;
+                    }
+                }
+                System.out.println("firstKey " + firstKey);
+                // find second correct second position
+
+
+            }
+            canContain = null;
+        }
+
+        System.out.println(r);
+        int sum = 0;
+        for (String s : r) {
+            String[] ints = s.split(",");
+            int middle = ints.length / 2;
+
+            sum += Integer.parseInt( ints[middle] );
+
+        }
+        System.out.println(sum);
+
+    }
+
+    private static void part1(HashMap<Integer, Set<Integer>> rulesMap) {
         String[] split = pageInput.split("\n");
         ArrayList<String> r = new ArrayList<>();
 
@@ -76,19 +147,18 @@ public class Main {
 
         }
         System.out.println(sum);
-
     }
 
     private static boolean isValid(String s, String[] numbers, Set<Integer> canContain, HashMap<Integer, Set<Integer>> rulesMap) {
         for (int i = 0; i < numbers.length; i++) {
             int number = Integer.parseInt(numbers[i]);
-            System.out.println("processing " + number);
+//            System.out.println("processing " + number);
             if (Objects.isNull(canContain))  {
                 canContain = rulesMap.get(number);
                 System.out.println(canContain);
                 continue;
             }
-            System.out.println("canContain");
+//            System.out.println("canContain");
             if (canContain.contains(number)) {
                 canContain = rulesMap.get(number);
             } else {
