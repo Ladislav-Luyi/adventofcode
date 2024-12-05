@@ -60,23 +60,8 @@ public class Main {
         Set<Integer> canContain = null;
         for (String s : split) {
             String[] numbers = s.split(",");
-            for (int i = 0; i < numbers.length; i++) {
-                int number = Integer.parseInt(numbers[i]);
-                System.out.println("processing " + number);
-                if (Objects.isNull(canContain))  {
-                    canContain = rulesMap.get(number);
-                    System.out.println(canContain);
-                    continue;
-                }
-                System.out.println("canContain");
-                if (canContain.contains(number)) {
-                    canContain = rulesMap.get(number);
-                } else {
-                    break;
-                }
-                if (i == numbers.length - 1){
-                    r.add(s);
-                }
+            if (isValid(s, numbers, canContain, rulesMap)){
+                r.add(s);
             }
             canContain = null;
         }
@@ -92,5 +77,27 @@ public class Main {
         }
         System.out.println(sum);
 
+    }
+
+    private static boolean isValid(String s, String[] numbers, Set<Integer> canContain, HashMap<Integer, Set<Integer>> rulesMap) {
+        for (int i = 0; i < numbers.length; i++) {
+            int number = Integer.parseInt(numbers[i]);
+            System.out.println("processing " + number);
+            if (Objects.isNull(canContain))  {
+                canContain = rulesMap.get(number);
+                System.out.println(canContain);
+                continue;
+            }
+            System.out.println("canContain");
+            if (canContain.contains(number)) {
+                canContain = rulesMap.get(number);
+            } else {
+                break;
+            }
+            if (i == numbers.length - 1){
+                return true;
+            }
+        }
+        return false;
     }
 }
