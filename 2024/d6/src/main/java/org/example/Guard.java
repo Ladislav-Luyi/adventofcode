@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Guard {
     List<List<Character>> building;
@@ -20,11 +21,19 @@ public class Guard {
                 }
             }
         }
+        if (Objects.isNull( currentPosition )){
+            show();
+            throw new RuntimeException("Something is wrong current position is null");
+        }
     }
 
     int countSteps() {
         while (makeStep()) {
-//            show();
+            if (steps > 50_000_000){
+//            if (isCyclic(building.size(), building)){
+                throw new LoopException();
+            }
+            show();
             steps++;
         }
         return steps;
@@ -43,6 +52,7 @@ public class Guard {
 
     boolean makeStep() {
         try {
+            
             Position nextPosition = getNextPosition();
             int row = currentPosition.stage();
             int col = currentPosition.tile();
