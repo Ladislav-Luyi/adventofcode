@@ -10,10 +10,9 @@ import java.util.List;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static List<List<Character>> list = new ArrayList<>();
-    static ArrayList<String> strings = loadFile("test1");
+    static ArrayList<String> strings = loadFile("test");
 
     private static  List<List<Character>> parseToList() {
-        // 1598 too low 1599 too low 1600
         List<List<Character>> list = new ArrayList<>();
         for (String string : strings) {
             ArrayList<Character> objects = new ArrayList<>();
@@ -27,9 +26,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        part1();
-//        System.out.println( new Guard(list).countSteps());
-//        part2();
+//        part1();
+        part2();
     }
 
     private static void part2() {
@@ -38,24 +36,16 @@ public class Main {
         for (int i = 0; i < list.size(); i++) {
             List<Character> characters = list.get(i);
             for (int j = 0; j < characters.size(); j++) {
-//                System.out.println("next tile " + i + " " + j);
-                Character character = characters.get(j);
                 if (list.get(i).get(j) == '^' || list.get(i).get(j) == '#') {
-                    list = parseToList(); // TODO is this needed?
                     continue;
                 }
                 list.get(i).set(j, '#');
-                // main
                 try {
                     Guard guard = new Guard(list);
-//                    guard.show();
                     guard.countSteps();
                 } catch (LoopException e) {
-//                    System.out.println("loop exception");
                     loops++;
                 }
-                // switch back
-//                list.get(i).set(j, '.');
                 list = parseToList();
             }
         }

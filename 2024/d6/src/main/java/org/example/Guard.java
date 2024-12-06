@@ -29,11 +29,9 @@ public class Guard {
 
     int countSteps() {
         while (makeStep()) {
-            if (steps > 50_000_000){
-//            if (isCyclic(building.size(), building)){
+            if (steps > 1_000_000){
                 throw new LoopException();
             }
-            show();
             steps++;
         }
         return steps;
@@ -52,7 +50,7 @@ public class Guard {
 
     boolean makeStep() {
         try {
-            
+            assignNextDirection();
             Position nextPosition = getNextPosition();
             int row = currentPosition.stage();
             int col = currentPosition.tile();
@@ -79,39 +77,50 @@ public class Guard {
         return counter;
     }
 
+    void assignNextDirection(){
+        int row = currentPosition.stage();
+        int col = currentPosition.tile();
+
+        for (int i = 0; i < 4; i++ ) {
+            if (currentDirection.equals(Direction.UP)) {
+                if (building.get(row - 1).get(col).equals('#')) {
+                    currentDirection = Direction.RIGHT;
+                }
+            }
+
+            if (currentDirection.equals(Direction.RIGHT)) {
+                if (building.get(row).get(col + 1).equals('#')) {
+                    currentDirection = Direction.DOWN;
+                }
+            }
+
+            if (currentDirection.equals(Direction.DOWN)) {
+                if (building.get(row + 1).get(col).equals('#')) {
+                    currentDirection = Direction.LEFT;
+                }
+            }
+
+            if (currentDirection.equals(Direction.LEFT)) {
+                if (building.get(row).get(col - 1).equals('#')) {
+                    currentDirection = Direction.UP;
+                }
+            }
+        }
+    }
+
 
     Position getNextPosition() {
         int row = currentPosition.stage();
         int col = currentPosition.tile();
         if (currentDirection.equals(Direction.UP)) {
-            if (building.get(row - 1).get(col).equals('#')) {
-                currentDirection = Direction.RIGHT;
-                return new Position(row, col + 1);
-            } else {
-                return new Position(row - 1, col);
-            }
+            return new Position(row - 1, col);
         } else if (currentDirection.equals(Direction.RIGHT)) {
-            if (building.get(row).get(col + 1).equals('#')) {
-                currentDirection = Direction.DOWN;
-                return new Position(row + 1, col);
-            } else {
-                return new Position(row, col + 1);
-            }
+            return new Position(row, col + 1);
         } else if (currentDirection.equals(Direction.DOWN)) {
-            if (building.get(row + 1).get(col).equals('#')) {
-                currentDirection = Direction.LEFT;
-                return new Position(row, col - 1);
-            } else {
-                return new Position(row + 1, col);
-            }
-        } else
-//         (currentDirection.equals(Direction.LEFT)){
-            if (building.get(row ).get(col -1).equals('#')) {
-                currentDirection = Direction.UP;
-                return new Position(row - 1, col); // ??
-            } else {
-                return new Position(row, col - 1);
-            }
+            return new Position(row + 1, col);
+        } else {
+            return new Position(row, col - 1);
+        }
     }
 }
 
