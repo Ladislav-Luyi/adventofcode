@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        List<Pair> test = loadFile("test")
+        List<Pair> test = loadFile("input")
                 .stream().map(
                         Main::parseToPair
                 )
@@ -19,47 +19,27 @@ public class Main {
 
     }
 
-    static Set<Long> set = new HashSet<>();
-    private static void part2(List<Pair> test) {
-        System.out.println(test);
-        ArrayList<Pair> pairs = new ArrayList<>();
-        for (Pair pair : test) {
-            set.clear();
-            if (combination(pair, new ArrayList<>(), 0, new ArrayList<>())){
-                pairs.add(pair);
-            }else {
-                if (pair.arguments().size() == 2 && concatToLong(pair.arguments()).equals(pair.result())){
-                    System.out.println("adding pair " + pair);
-                    pairs.add(pair);
-                }
-                assignCombinations(pair, new ArrayList<>(), 0, new ArrayList<>());
-            }
-            System.out.println(set);
-        }
-
-
-        Long result = pairs.stream()
-                .map(Pair::result)
-                .reduce(Long::sum)
-                .orElseThrow();
-        System.out.println(result);
-    }
-
-    private static Long concatToLong(List<Long> arguments) {
-        StringBuilder stringBuilder = new StringBuilder();
-        arguments.forEach(stringBuilder::append);
-        return Long.parseLong(stringBuilder.toString());
-    }
 
     private static void part1(List<Pair> test) {
         Long result = test.stream()
-                .filter(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()))
+                .filter(e -> combination1(e, new ArrayList<>(), 0, new ArrayList<>()))
                 .peek(System.out::println)
                 .map(Pair::result)
                 .reduce(Long::sum)
                 .orElseThrow();
         System.out.println(result);
     }
+
+    private static void part2(List<Pair> test) {
+        Long result = test.stream()
+                .filter(e -> combination2(e, new ArrayList<>(), 0, new ArrayList<>()))
+                .peek(System.out::println)
+                .map(Pair::result)
+                .reduce(Long::sum)
+                .orElseThrow();
+        System.out.println(result);
+    }
+
 
     private static Pair parseToPair(String s) {
         String[] split = s.split(":");
@@ -90,70 +70,19 @@ public class Main {
         return lines;
     }
 
-    static void assignCombinations(
-            Pair pair,
-            List<Long> longs,
-            int i,
-            List<Operator> operators
-    ) {
-        Long sum = 0l;
-        if (longs.size() == pair.arguments().size()) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int j = 0; j < longs.size(); j++) {
-                Long l = longs.get(j);
-                if (Objects.isNull(operators)) {
-                    sum = 0l;
-                    break;
-                }
-                if (j == 0) {
-                    sum = l;
-                    stringBuilder.append(l + " ");
-                    continue;
-                }
-                Operator operator = operators.get(j);
-                if (operator.equals(Operator.PLUS)) {
-                    sum += l;
-                    stringBuilder.append(" + " + l);
-                }
-                if (operator.equals(Operator.MULTIPLICATION)) {
-                    sum *= l;
-                    stringBuilder.append(" * " + l);
-                }
-            }
-            stringBuilder.append(" = " + sum);
-//            System.out.println(stringBuilder);
-        }
-
-        if (longs.size() == pair.arguments().size()) {
-            set.add(sum);
-            return;
-        }
-        for (int j = i; j < pair.arguments().size(); j++) {
-            Long get = pair.arguments().get(j);
-            longs.add(get);
-            operators.add(Operator.PLUS);
-            assignCombinations(pair, longs, j + 1, operators);
-            operators.remove(operators.size() -1);
-            operators.add(Operator.MULTIPLICATION);
-            assignCombinations(pair, longs, j + 1, operators);
-            operators.remove(operators.size() -1);
-            longs.remove(longs.size() -1 );
-        }
-    }
-
-    static boolean combination(
+    static boolean combination1(
             Pair pair,
             List<Long> tmp,
             int i,
             List<Operator> operators
     ) {
-        Long sum = 0l;
+        Long sum = 0L;
         if (tmp.size() == pair.arguments().size()) {
             StringBuilder stringBuilder = new StringBuilder();
             for (int j = 0; j < tmp.size(); j++) {
                 Long l = tmp.get(j);
                 if (Objects.isNull(operators)) {
-                    sum = 0l;
+                    sum = 0L;
                     break;
                 }
                 if (j == 0) {
@@ -186,24 +115,102 @@ public class Main {
             Long get = pair.arguments().get(j);
             tmp.add(get);
             operators.add(Operator.PLUS);
-            combination1 = combination(pair, tmp, j + 1, operators);
-            if (combination1 == true){
+            combination1 = combination1(pair, tmp, j + 1, operators);
+            if (combination1) {
                 return true;
             }
-            operators.remove(operators.size() -1);
+            operators.remove(operators.size() - 1);
             operators.add(Operator.MULTIPLICATION);
-            combination1 = combination(pair, tmp, j + 1, operators);
-            if (combination1 == true){
+            combination1 = combination1(pair, tmp, j + 1, operators);
+            if (combination1) {
                 return true;
             }
-            operators.remove(operators.size() -1);
-            tmp.remove(tmp.size() -1 );
+            operators.remove(operators.size() - 1);
+            tmp.remove(tmp.size() - 1);
         }
         return combination1;
     }
 
-    enum Operator{
-        MULTIPLICATION, PLUS
+    static boolean combination2(
+            Pair pair,
+            List<Long> tmp,
+            int i,
+            List<Operator> operators
+    ) {
+        Long sum = 0L;
+        if (tmp.size() == pair.arguments().size()) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int j = 0; j < tmp.size(); j++) {
+                Long l = tmp.get(j);
+                if (Objects.isNull(operators)) {
+                    sum = 0L;
+                    break;
+                }
+                if (j == 0) {
+                    sum = l;
+                    stringBuilder.append(l + " ");
+                    continue;
+                }
+                Operator operator = operators.get(j);
+                if (operator.equals(Operator.PLUS)) {
+                    sum += l;
+                    stringBuilder.append(" + " + l);
+                }
+                if (operator.equals(Operator.MULTIPLICATION)) {
+                    sum *= l;
+                    stringBuilder.append(" * " + l);
+                }
+                if (operator.equals(Operator.CONCAT)) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(sum);
+                    sb.append(l);
+                    sum = Long.valueOf(sb.toString());
+                    stringBuilder.append(" || " + l);
+                }
+            }
+            stringBuilder.append(" = " + sum);
+//            System.out.println(stringBuilder);
+        }
+        if (sum > pair.result()) {
+            return false;
+        }
+
+        if (sum.equals(pair.result()) && tmp.size() == pair.arguments().size()) {
+            return true;
+        }
+        boolean combination1 = false;
+        for (int j = i; j < pair.arguments().size(); j++) {
+            Long get = pair.arguments().get(j);
+            tmp.add(get);
+            // plus
+            operators.add(Operator.PLUS);
+            combination1 = combination2(pair, tmp, j + 1, operators);
+            if (combination1) {
+                return true;
+            }
+            operators.remove(operators.size() - 1);
+            // MULTIPLICATION
+            operators.add(Operator.MULTIPLICATION);
+            combination1 = combination2(pair, tmp, j + 1, operators);
+            if (combination1) {
+                return true;
+            }
+            operators.remove(operators.size() - 1);
+            // concat
+            operators.add(Operator.CONCAT);
+            combination1 = combination2(pair, tmp, j + 1, operators);
+            if (combination1) {
+                return true;
+            }
+            operators.remove(operators.size() - 1);
+
+            tmp.remove(tmp.size() - 1);
+        }
+        return combination1;
+    }
+
+    enum Operator {
+        MULTIPLICATION, PLUS, CONCAT
     }
 }
 
