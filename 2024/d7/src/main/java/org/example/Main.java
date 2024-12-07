@@ -13,11 +13,11 @@ import java.util.stream.Stream;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static List<Integer> list = new ArrayList<>();
-
     public static void main(String[] args) {
         // 1248724126354 too low
-        List<Pair> test = loadFile("test")
+        // 1248732023747 too low
+        // 1248732023747
+        List<Pair> test = loadFile("input")
                 .stream().map(
                         Main::parseToPair
                 )
@@ -112,13 +112,13 @@ public class Main {
             if (combination1 == true){
                 return true;
             }
-            operators.remove(Operator.PLUS);
+            operators.remove(operators.size() -1);
             operators.add(Operator.MULTIPLICATION);
             combination1 = combination(pair, tmp, j + 1, operators);
             if (combination1 == true){
                 return true;
             }
-            operators.remove(Operator.MULTIPLICATION);
+            operators.remove(operators.size() -1);
             // TODO is this correct??
             tmp.remove(tmp.size() -1 );
         }
