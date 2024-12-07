@@ -21,7 +21,7 @@ public class Main {
                 )
                 .peek(System.out::println)
                 .toList();
-        test.forEach(e -> combination(e, new ArrayList<>(), 0, null));
+        test.forEach(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()));
         System.out.println(list);
 
 
@@ -60,14 +60,14 @@ public class Main {
             Pair pair,
             List<Integer> tmp,
             int i,
-            Operator operator
+            List<Operator> operators
     ) {
         Integer sum = 0;
         if (tmp.size() == pair.arguments().size()) {
             StringBuilder stringBuilder = new StringBuilder();
             for (int j = 0; j < tmp.size(); j++) {
                 Integer integer = tmp.get(j);
-                if (Objects.isNull(operator)) {
+                if (Objects.isNull(operators)) {
                     sum = 0;
                     break;
                 }
@@ -76,6 +76,7 @@ public class Main {
                     stringBuilder.append(integer + " ");
                     continue;
                 }
+                Operator operator = operators.get(j);
                 if (operator.equals(Operator.PLUS)) {
                     sum += integer;
                     stringBuilder.append(" + " + integer);
@@ -100,8 +101,12 @@ public class Main {
         for (int j = i; j < pair.arguments().size(); j++) {
             Integer get = pair.arguments().get(j);
             tmp.add(get);
-            combination(pair, tmp, j + 1, Operator.PLUS);
-            combination(pair, tmp, j + 1, Operator.MULTIPLICATION);
+            operators.add(Operator.PLUS);
+            combination(pair, tmp, j + 1, operators);
+            operators.remove(Operator.PLUS);
+            operators.add(Operator.MULTIPLICATION);
+            combination(pair, tmp, j + 1, operators);
+            operators.remove(Operator.MULTIPLICATION);
             tmp.remove(get);
         }
     }
