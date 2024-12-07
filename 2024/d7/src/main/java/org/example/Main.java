@@ -10,13 +10,8 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        // 1248724126354 too low
-        // 1248732023747 too low
-        // 1248732023747
         List<Pair> test = loadFile("input")
                 .stream().map(
                         Main::parseToPair
@@ -119,7 +114,6 @@ public class Main {
                 return true;
             }
             operators.remove(operators.size() -1);
-            // TODO is this correct??
             tmp.remove(tmp.size() -1 );
         }
         return combination1;
