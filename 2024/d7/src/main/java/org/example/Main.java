@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -19,10 +20,12 @@ public class Main {
                 .stream().map(
                         Main::parseToPair
                 )
-                .peek(System.out::println)
+//                .peek(System.out::println)
                 .toList();
         test.forEach(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()));
-        System.out.println(list);
+        test.stream().filter(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()))
+                .peek(System.out::println)
+                .collect(Collectors.toList());
 
 
     }
@@ -56,7 +59,7 @@ public class Main {
         return lines;
     }
 
-    static void combination(
+    static boolean combination(
             Pair pair,
             List<Integer> tmp,
             int i,
@@ -87,28 +90,34 @@ public class Main {
                 }
             }
             stringBuilder.append(" = " + sum);
-            System.out.println(stringBuilder);
+//            System.out.println(stringBuilder);
         }
         if (sum > pair.result()) {
-            return;
+            return false;
         }
 
         if (sum.equals(pair.result()) && tmp.size() == pair.arguments().size()) {
-//            listList.add(new ArrayList<>(tmp));
-            list.add(sum);
-            return;
+            return true;
         }
+        boolean combination1 = false;
         for (int j = i; j < pair.arguments().size(); j++) {
             Integer get = pair.arguments().get(j);
             tmp.add(get);
             operators.add(Operator.PLUS);
-            combination(pair, tmp, j + 1, operators);
+            combination1 = combination(pair, tmp, j + 1, operators);
+            if (combination1 == true){
+                return true;
+            }
             operators.remove(Operator.PLUS);
             operators.add(Operator.MULTIPLICATION);
-            combination(pair, tmp, j + 1, operators);
+            combination1 = combination(pair, tmp, j + 1, operators);
+            if (combination1 == true){
+                return true;
+            }
             operators.remove(Operator.MULTIPLICATION);
             tmp.remove(get);
         }
+        return combination1;
     }
 
     enum Operator{
