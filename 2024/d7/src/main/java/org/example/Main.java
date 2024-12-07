@@ -16,6 +16,7 @@ public class Main {
     public static List<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) {
+        // 1248724126354 too low
         List<Pair> test = loadFile("test")
                 .stream().map(
                         Main::parseToPair
@@ -23,20 +24,23 @@ public class Main {
 //                .peek(System.out::println)
                 .toList();
         test.forEach(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()));
-        test.stream().filter(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()))
+        Long result = test.stream()
+                .filter(e -> combination(e, new ArrayList<>(), 0, new ArrayList<>()))
                 .peek(System.out::println)
-                .collect(Collectors.toList());
-
+                .map(Pair::result)
+                .reduce(Long::sum)
+                .orElseThrow();
+        System.out.println(result);
 
     }
 
     private static Pair parseToPair(String s) {
         String[] split = s.split(":");
-        int result = Integer.parseInt(split[0]);
-        List<Integer> ints = new ArrayList<>();
+        long result = Long.parseLong(split[0]);
+        List<Long> ints = new ArrayList<>();
         Stream.of(split[1].split(" +"))
                 .skip(1)
-                .forEach(e -> ints.add(Integer.valueOf(e)));
+                .forEach(e -> ints.add(Long.valueOf(e)));
         return new Pair(result, ints);
     }
 
@@ -61,32 +65,32 @@ public class Main {
 
     static boolean combination(
             Pair pair,
-            List<Integer> tmp,
+            List<Long> tmp,
             int i,
             List<Operator> operators
     ) {
-        Integer sum = 0;
+        Long sum = 0l;
         if (tmp.size() == pair.arguments().size()) {
             StringBuilder stringBuilder = new StringBuilder();
             for (int j = 0; j < tmp.size(); j++) {
-                Integer integer = tmp.get(j);
+                Long l = tmp.get(j);
                 if (Objects.isNull(operators)) {
-                    sum = 0;
+                    sum = 0l;
                     break;
                 }
                 if (j == 0) {
-                    sum = integer;
-                    stringBuilder.append(integer + " ");
+                    sum = l;
+                    stringBuilder.append(l + " ");
                     continue;
                 }
                 Operator operator = operators.get(j);
                 if (operator.equals(Operator.PLUS)) {
-                    sum += integer;
-                    stringBuilder.append(" + " + integer);
+                    sum += l;
+                    stringBuilder.append(" + " + l);
                 }
                 if (operator.equals(Operator.MULTIPLICATION)) {
-                    sum *= integer;
-                    stringBuilder.append(" * " + integer);
+                    sum *= l;
+                    stringBuilder.append(" * " + l);
                 }
             }
             stringBuilder.append(" = " + sum);
@@ -101,7 +105,7 @@ public class Main {
         }
         boolean combination1 = false;
         for (int j = i; j < pair.arguments().size(); j++) {
-            Integer get = pair.arguments().get(j);
+            Long get = pair.arguments().get(j);
             tmp.add(get);
             operators.add(Operator.PLUS);
             combination1 = combination(pair, tmp, j + 1, operators);
@@ -115,7 +119,8 @@ public class Main {
                 return true;
             }
             operators.remove(Operator.MULTIPLICATION);
-            tmp.remove(get);
+            // TODO is this correct??
+            tmp.remove(tmp.size() -1 );
         }
         return combination1;
     }

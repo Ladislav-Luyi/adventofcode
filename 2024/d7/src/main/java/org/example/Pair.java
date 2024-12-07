@@ -2,5 +2,5 @@ package org.example;
 
 import java.util.List;
 
-public record Pair(Integer result, List<Integer> arguments) {
+public record Pair(Long result, List<Long> arguments) {
 }
