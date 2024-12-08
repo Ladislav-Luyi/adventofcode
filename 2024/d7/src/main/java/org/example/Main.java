@@ -52,7 +52,7 @@ public class Main {
     }
 
     public static List<String> loadFile(String filename) {
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         try {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
             InputStream inputStream = classloader.getResourceAsStream(filename);
