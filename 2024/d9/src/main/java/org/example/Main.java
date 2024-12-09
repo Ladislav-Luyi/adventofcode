@@ -51,6 +51,21 @@ public class Main {
 //        List<String> newString = ;
 
 //        System.out.println(nodes);
+        List<String> strings1 = parseToString(nodes);
+        System.out.println("final " + strings1);
+        long sum = 0;
+        int position = 0;
+        for (String s : strings1) {
+            if (s.equals(".")){
+                continue;
+            }
+            long i = Long.parseLong(s);
+            sum += i * position;
+            position++;
+        }
+
+        System.out.println(sum);
+
 
     }
 
@@ -59,6 +74,23 @@ public class Main {
         List<Node> finish = new ArrayList<>();
 
         while(!nodes.isEmpty()){
+            // there is not suitable space for last file and all spaces where checked
+            if (!tmp.isEmpty() && nodes.size() == 1){
+                Node pollLast = nodes.pollLast();
+                System.out.println("match " + pollLast);
+                finish.add(pollLast);
+                Collections.reverse(tmp);
+                tmp.forEach(nodes::addFirst);
+                tmp.clear();
+                continue;
+            }
+
+            if (tmp.isEmpty() && nodes.size() == 1){
+                Node pollLast = nodes.pollLast();
+                finish.add(pollLast);
+                continue;
+            }
+
             System.out.println("step " + parseToString(nodes));
             Node last = nodes.peekLast();
             System.out.println(" processing last " + last);
@@ -74,16 +106,7 @@ public class Main {
             }
             System.out.println("comparing " + "first " + first + " last " + last);
 
-            // there is not suitable space for last file and all spaces where checked
-            if (!tmp.isEmpty() && nodes.size() == 1){
-                Node pollLast = nodes.pollLast();
-                System.out.println("match " + pollLast);
-                finish.add(pollLast);
-                Collections.reverse(tmp);
-                tmp.forEach(nodes::addFirst);
-                tmp.clear();
-                continue;
-            }
+
             // there is place for last
             if (first.n() >= last.n()){
                 int delta = first.n() - last.n();
@@ -109,10 +132,13 @@ public class Main {
 //            Collections.reverse(tmp);
 //            tmp.forEach(nodes::add);
 //        }
+//        System.out.println(finish);
         if (!finish.isEmpty()){
 //                Collections.reverse(firstList);
-            tmp.forEach(nodes::addLast);
+            Collections.reverse(finish);
+            finish.forEach(nodes::addLast);
         }
+        System.out.println("finish " + finish);
 
         return nodes;
     }
