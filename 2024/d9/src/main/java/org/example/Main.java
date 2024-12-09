@@ -44,48 +44,174 @@ public class Main {
             fileCounter++;
         }
         System.out.println(strings);
+
         Deque<Node> nodes = compress(strings);
+        nodes = process1(nodes);
+        System.out.println(parseToString(nodes));
+//        List<String> newString = ;
 
-        System.out.println(nodes);
-
-        Deque<Node> finalString = process(nodes);
-
-        System.out.println(finalString);
-
+//        System.out.println(nodes);
 
     }
 
-    private static Deque<Node> process(Deque<Node> nodes) {
-        int emptySpaceCounter = 0;
-        Deque<Node> finalString = new ArrayDeque<>();
+    private static Deque<Node> process1(Deque<Node> nodes) {
+        List<Node> tmp = new ArrayList<>();
+        List<Node> finish = new ArrayList<>();
+
         while(!nodes.isEmpty()){
-            Node first = nodes.pollFirst();
-            if (first.isFile()){
-                finalString.add(first);
+            System.out.println("step " + parseToString(nodes));
+            Node last = nodes.peekLast();
+            System.out.println(" processing last " + last);
+            if (!last.isFile()){
+                finish.add(nodes.pollLast());
                 continue;
             }
+
+            Node first = nodes.pollFirst();
+            if (first.isFile()){
+                tmp.add(first);
+                continue;
+            }
+            System.out.println("comparing " + "first " + first + " last " + last);
+
+            // there is not suitable space for last file and all spaces where checked
+            if (!tmp.isEmpty() && nodes.size() == 1){
+                Node pollLast = nodes.pollLast();
+                System.out.println("match " + pollLast);
+                finish.add(pollLast);
+                Collections.reverse(tmp);
+                tmp.forEach(nodes::addFirst);
+                tmp.clear();
+                continue;
+            }
+            // there is place for last
+            if (first.n() >= last.n()){
+                int delta = first.n() - last.n();
+                //finish left
+                if (delta > 0) {
+                    nodes.addFirst(new Node(false, ".", delta));
+                }
+//                last = nodes.pollLast();
+                nodes.addFirst(nodes.pollLast());
+                Collections.reverse(tmp);
+                tmp.forEach(nodes::addFirst);
+                tmp.clear();
+                //finish right
+                finish.add(new Node(false, ".", last.n()));
+
+            }else {
+                // there is not suitable space for last file
+                tmp.add(first);
+            }
+        }
+
+//        if (!tmp.isEmpty()){
+//            Collections.reverse(tmp);
+//            tmp.forEach(nodes::add);
+//        }
+        if (!finish.isEmpty()){
+//                Collections.reverse(firstList);
+            tmp.forEach(nodes::addLast);
+        }
+
+        return nodes;
+    }
+
+    private static List<String> parseToString(Deque<Node> nodes) {
+        List<String> list = new ArrayList<>();
+        for (Node node : new ArrayList<>(nodes)) {
+            for (int i = 0; i < node.n(); i++){
+                list.add(node.s());
+            }
+        }
+        return list;
+    }
+
+    private static Deque<Node> compress(Deque<Node> input) {
+        Deque<Node> nodes = new ArrayDeque<>();
+        int lastCounter = 0;
+        while(!input.isEmpty()){
+            Node first = input.pollFirst();
+            if (first.isFile()){
+                nodes.add(first);
+                continue;
+            }
+            Node peekNext = input.peekFirst();
+            lastCounter+=first.n();
+            if (Objects.isNull(peekNext) || peekNext.isFile()){
+                if (lastCounter > 0){
+                    nodes.add(new Node(false,".",lastCounter));
+                    lastCounter = 0;
+                }
+            }
+
+        }
+
+        return nodes;
+
+    }
+
+    private static boolean isMoveAble( Deque<Node> nodes) {
+        System.out.println(nodes);
+        Deque<Node> copy = new ArrayDeque<>(nodes);
+        if (!copy.peekLast().isFile()){
+            copy.pollLast();
+        }
+        List<Node> list = new ArrayList<>(copy);
+        boolean isMoveAble = false;
+        for (int i = list.size() -1; i >=0; i--){
+            Node last = list.get(i);
+            if (!last.isFile()){
+                continue;
+            }
+            for (int j = i - 1; j >=0; j--){
+                Node next = list.get(j);
+                if (next.isFile()){
+                    continue;
+                }
+                if (last.n() <= next.n()){
+                    return true;
+                }
+            }
+        }
+
+        return isMoveAble;
+    }
+
+    private static Deque<Node> process(Deque<Node> nodes) {
+        List<Node> lastNodes = new ArrayList<>();
+        Deque<Node> finalString = new ArrayDeque<>();
+        while(!nodes.isEmpty()){
+            Node first = nodes.peekFirst();
             Node last = nodes.peekLast();
-            System.out.println(last);
-            if (Objects.isNull(last)) {
-                finalString.add(first);
+            if (first.isFile()){
+                finalString.add(nodes.pollFirst());
                 continue;
             }
 
             if (first.n() < last.n()){
+                lastNodes.add(nodes.pollLast());
+                continue;
+            }
+            // TODO do I have to handle what happens with last .??
+            first = nodes.pollFirst();
+            if (first == last){
                 finalString.add(first);
                 continue;
             }
             last = nodes.pollLast();
-            emptySpaceCounter+=last.n();
+            lastNodes.add(new Node(false, ".", last.n()));
             int deltaDots = first.n() - last.n();
             finalString.add(last);
             if (deltaDots > 0) {
-                finalString.add(new Node(false, ".", deltaDots));
+                nodes.addFirst(new Node(false, ".", deltaDots));
             }
         }
-        if (emptySpaceCounter > 0) {
-            finalString.add(new Node(false, ".", emptySpaceCounter));
-        }
+
+//        System.out.println("final string before " + finalString);
+        Collections.reverse(lastNodes);
+
+        finalString.addAll(lastNodes);
         return finalString;
     }
 
@@ -97,14 +223,14 @@ public class Main {
             String current = strings.get(i);
 //            System.out.println("previous " + previous + " current " + current);
             if (!previous.equals(current)){
-                boolean isFile = ! current.equals(".") ? false : true;
-                nodes.add(new Node(isFile,previous, lastCounter));
+                boolean isNotFile = previous.equals(".") ? false : true;
+                nodes.add(new Node(isNotFile,previous, lastCounter));
                 lastCounter = 1;
             }else {
                 lastCounter++;
             }
             if (i == strings.size() - 1){
-                boolean isFile = ! current.equals(".") ? false : true;
+                boolean isFile = previous.equals(".") ? false : true;
                 nodes.add(new Node(isFile,previous, lastCounter));
             }
         }
