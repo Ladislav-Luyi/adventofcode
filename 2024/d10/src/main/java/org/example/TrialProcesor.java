@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,31 +68,28 @@ public class TrialProcesor {
     }
 
     public int evaluateScore(){
-        HashSet<Triple> set = new HashSet<>();
         for(Triple next : start) {
-            processTree(next, set);
+            processTree(next);
             visited = new boolean[trial.getTrial().size()][trial.getTrial().get(0).size()];
         }
-        System.out.println(set);
         return score;
     }
 
-    private void processTree(Triple start, HashSet<Triple> set) {
+    private void processTree(Triple start) {
         List<Triple> nextMoves = getNextMoves(start);
         Iterator<Triple> iterator = nextMoves.iterator();
         while(iterator.hasNext()){
             Triple next = iterator.next();
+            // comment for part2
             if (visited[next.r()][next.c()]){
                 continue;
             }
             if (next.i() == 9){
                 score++;
-                set.add(next);
             }
-            visited[next.r()][next.c()] = true;
-            System.out.println("procesing " + next);
-            processTree(next, set);
 
+            visited[next.r()][next.c()] = true;
+            processTree(next);
         }
 
     }

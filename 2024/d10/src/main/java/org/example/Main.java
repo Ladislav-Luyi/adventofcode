@@ -12,9 +12,7 @@ public class Main {
     public static void main(String[] args) {
         List<String> strings = loadFile("input");
         Trial trial = new Trial(strings);
-        trial.showTrial();
         TrialProcesor trialProcesor = new TrialProcesor(trial);
-        trialProcesor.showVisted();
         System.out.println(trialProcesor.evaluateScore());
     }
 
