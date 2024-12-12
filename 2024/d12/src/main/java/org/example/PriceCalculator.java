@@ -21,7 +21,7 @@ public class PriceCalculator {
         for (Region region : regions) {
             mapping.merge(region.getRegionId(), region.plots.size(), Integer::sum);
         }
-        System.out.println(mapping);
+//        System.out.println(mapping);
         System.out.println(calculator.getSides());
 
         for (Map.Entry<Character, Integer> entry : mapping.entrySet()) {
