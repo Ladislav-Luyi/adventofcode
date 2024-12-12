@@ -25,6 +25,10 @@ public class Main {
         PriceCalculator calculator = new PriceCalculator(garden.regions);
         System.out.println(calculator.getPrice());
 
+        SideCalculator sideCalculator = new SideCalculator(garden);
+//        System.out.println(sideCalculator.getSidesMapping());
+
+
     }
 
     public static List<String> loadFile(String filename) {

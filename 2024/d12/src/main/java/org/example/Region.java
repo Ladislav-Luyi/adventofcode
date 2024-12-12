@@ -9,6 +9,8 @@ public class Region {
     Set<Plot> plots = new HashSet<>();
     int area, perimiter;
 
+    int sides = 0;
+
     public Region(char regionId, Set<Plot> plots, int perimiter) {
         this.regionId = regionId;
         this.plots = plots;

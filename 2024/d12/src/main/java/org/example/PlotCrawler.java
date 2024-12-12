@@ -96,7 +96,6 @@ public class PlotCrawler {
             visited[next.r()][next.c()] = true;
             processTree(next, plotIdentifier, collected);
         }
-
     }
 
 
