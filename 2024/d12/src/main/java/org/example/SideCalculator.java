@@ -4,145 +4,153 @@ import java.util.*;
 
 public class SideCalculator {
     private final Garden garden;
-    private final HashMap<Character, Integer> sidesMapping = new HashMap<>();
-
-
-    boolean[][] visited;
+    HashMap<Character, Integer> sides = new HashMap<>();
+    List<Plot> matches = new ArrayList<>();
 
     public SideCalculator(Garden garden) {
         this.garden = garden;
+        HashSet<Character> uniqIds = new HashSet<>();
+        List<List<Plot>> plots = garden.getPlots();
+        for (List<Plot> inner : plots) {
+            for (Plot plot : inner) {
+                uniqIds.add(plot.i());
+            }
+
+        }
+
+        List<Direction> verticalCheck = List.of(Direction.RIGHT, Direction.LEFT);
+        List<Direction> horizonalCheck = List.of(Direction.TOP, Direction.BOT);
 
 
-        for (Side value : Side.values()) {
-            visited = new boolean[garden.getPlots().size()][garden.getPlots().get(0).size()];
-            run(value);
+        for (Character id : uniqIds) {
+//         from top down
+
+            for (Direction direction : verticalCheck) {
+                boolean isMatchCounted = true;
+                for (int i = -1; i < plots.get(0).size() + 1; i++) {
+
+                    for (int j = -1; j < plots.size() + 1; j++) {
+
+                        Optional<Plot> tmp = getPlot(j, i);
+                        Plot plot = tmp.orElse(new Plot(j, i, '-'));
+//                        System.out.print(plot + " ");
+                        if (Direction.RIGHT.equals(direction)) {
+                            if (!isNextSame(plot, id, Direction.RIGHT) || isNextSame(plot, id, Direction.BOT) ) {
+                                isMatchCounted = true;
+                            }
+                        }
+                        if (Direction.LEFT.equals(direction)) {
+                            if (!isNextSame(plot, id, Direction.LEFT) || isNextSame(plot, id, Direction.BOT)) {
+                                isMatchCounted = true;
+                            }
+                        }
+                        if (plot.i() == id){
+                            continue;
+                        }
+
+                        boolean isMatch = isNextSame(plot, id, direction);
+                        if (isMatch && isMatchCounted) {
+                            sides.merge(id, 1, Integer::sum);
+                            isMatchCounted = false;
+                        }
+                    }
+                    System.out.println();
+                }
+            }
+        }
+
+
+        for (Character id : uniqIds) {
+
+            for (Direction direction : horizonalCheck) {
+                boolean isMatchCounted = true;
+                // from left to right
+                for (int i = -1; i < plots.size() + 1; i++) {
+
+                    for (int j = -1; j < plots.get(0).size() + 1; j++) {
+                        Optional<Plot> tmp = getPlot(i, j);
+                        Plot plot = tmp.orElse(new Plot(i, j, '-'));
+
+                        if (Direction.TOP.equals(direction)) {
+                            if (!isNextSame(plot, id, Direction.TOP) || isNextSame(plot, id, Direction.RIGHT) ) {
+                                isMatchCounted = true;
+                            }
+                        }
+                        if (Direction.BOT.equals(direction)) {
+                            if (!isNextSame(plot, id, Direction.BOT) || isNextSame(plot, id, Direction.RIGHT)) {
+                                isMatchCounted = true;
+                            }
+                        }
+
+                        if (plot.i() == id){
+                            continue;
+                        }
+                        boolean isMatch = isNextSame(plot, id, direction);
+                        if (isMatch && isMatchCounted) {
+                            sides.merge(id, 1, Integer::sum);
+                            isMatchCounted = false;
+                        }
+//                        System.out.print(plot + " ");
+                    }
+//                    System.out.println();
+                }
+            }
+
+
         }
 
 
     }
 
-    public HashMap<Character, Integer> getSidesMapping() {
-        return sidesMapping;
+    public HashMap<Character, Integer> getSides() {
+        return sides;
     }
 
-    public Optional<Plot> getNextMove(Plot start,
-                                      Side side,
-                                      Character plotIdentifier) {
+    private Optional<Plot> getPlot(int i, int j) {
+        try {
+            return Optional.of(garden.getPlots().get(i).get(j));
+        } catch (IndexOutOfBoundsException e) {
+            return Optional.empty();
+        }
+    }
+
+
+    public boolean isNextSame(Plot start, Character id, Direction d) {
         List<List<Plot>> plots = garden.getPlots();
         int row = start.r();
         int col = start.c();
-        Plot plot = null;
+
         try {
-            if (side.equals(Side.HORIZONTAL) ) {
-                plot = plots.get(row).get(col + 1);
+            if (d.equals(Direction.TOP)) {
+                return plots.get(row - 1).get(col).i() == id;
+            }
+            if (d.equals(Direction.RIGHT)) {
+                boolean b = plots.get(row).get(col + 1).i() == id;
+                if (b){
+//                    System.out.println(d + " " + plots.get(row).get(col + 1));
+//                    matches.add(plots.get(row).get(col + 1));
+                }
+                return b;
+            }
+            if (d.equals(Direction.BOT)) {
+                return plots.get(row + 1).get(col).i() == id;
             } else {
-                plot = plots.get(row + 1).get(col);
+                boolean b = plots.get(row).get(col - 1).i() == id;
+                if (b){
+                    matches.add(plots.get(row).get(col - 1));
+//                    System.out.println(d + " " + plots.get(row).get(col - 1));
+                }
+                return b;
             }
 
         } catch (IndexOutOfBoundsException e) {
-        }
-        if (Objects.isNull(plot)) {
-            return Optional.empty();
-        }
-        if (plot.i() == plotIdentifier) {
-            return Optional.of(plot);
-        }
-        return Optional.empty();
-    }
-
-    public void run(Side side) {
-        for (List<Plot> plots : garden.getPlots()) {
-            for (Plot next : plots) {
-                if (isVisited(next)) {
-                    continue;
-                }
-                Character plotIdentifier = next.i();
-                Set<Plot> collected = new HashSet<>();
-                Set<Plot> visited = new HashSet<>();
-                visited.add(next);
-                processTree(next, plotIdentifier, collected, side, visited);
-                if (collected.isEmpty()) {
-                    continue;
-                }
-            }
+            return false;
         }
     }
-
-    private void processTree(Plot plot,
-                             Character plotIdentifier,
-                             Set<Plot> collected,
-                             Side side,
-                             Set<Plot> visited
-    ) {
-        // TODO mark as visited somehow, maybe not needed!!!
-        if (isVisited(plot)) {
-            return;
-        }
-        System.out.println("visiting " + plot);
-        addToVisited(plot);
-        Optional<Plot> next = getNextMove(plot, side, plotIdentifier);
-        if (next.isEmpty()) {
-            System.out.println("no more to visit");
-            return;
-        }
-
-
-        // TODO mark as visited somehow
-//            visited[next.r()][next.c()] = true;
-        processTree(next.get(), plotIdentifier, collected, side, visited);
-
-    }
-
-
-    private void addToVisited(Plot plot) {
-        visited[plot.r()][plot.c()] = true;
-    }
-
-    private boolean isVisited(Plot plot) {
-        return visited[plot.r()][plot.c()];
-    }
-
 
     enum Direction {
         TOP, RIGHT, BOT, LEFT
     }
 
-    enum Side {
-        HORIZONTAL, VERTICAL
-    }
-
-    public List<Plot> getNextMoves(Plot start, Character plotIdentifier) {
-        List<Plot> list = new ArrayList<>();
-        List<List<Plot>> plots = garden.getPlots();
-        int row = start.r();
-        int col = start.c();
-        // find which sides is possible to count by checking what is next to it, because it was already counted
-        // get possible directions for checks
-        // process directions and count sides and set new counts to FALSE
-
-
-        for (PlotCrawler.Direction d : PlotCrawler.Direction.values()) {
-            try {
-                if (d.equals(PlotCrawler.Direction.TOP)){
-                    list.add(plots.get(row-1).get(col));
-                }
-                if (d.equals(PlotCrawler.Direction.RIGHT)){
-                    list.add(plots.get(row).get(col+1));
-                }
-                if (d.equals(PlotCrawler.Direction.BOT)){
-                    list.add(plots.get(row+1).get(col));
-                }
-                if (d.equals(PlotCrawler.Direction.LEFT)){
-                    list.add(plots.get(row).get(col -1));
-                }
-
-            } catch (IndexOutOfBoundsException e) {
-            }
-        }
-
-        return
-                list.stream().filter(e -> e.i() == plotIdentifier )
-                        .toList();
-    }
 
 }

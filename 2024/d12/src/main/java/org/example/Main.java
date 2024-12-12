@@ -22,11 +22,9 @@ public class Main {
             System.out.println(region.area);
             System.out.println("======================");
         }
-        PriceCalculator calculator = new PriceCalculator(garden.regions);
+        PriceCalculator calculator = new PriceCalculator(garden.regions, new SideCalculator(garden));
         System.out.println(calculator.getPrice());
-
-        SideCalculator sideCalculator = new SideCalculator(garden);
-//        System.out.println(sideCalculator.getSidesMapping());
+        System.out.println(calculator.getDiscountedPrice());
 
 
     }
