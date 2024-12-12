@@ -8,8 +8,7 @@ public class Region {
     private final char regionId;
     Set<Plot> plots = new HashSet<>();
     int area, perimiter;
-
-    int sides = 0;
+    public int sides = 0;
 
     public Region(char regionId, Set<Plot> plots, int perimiter) {
         this.regionId = regionId;
@@ -55,6 +54,7 @@ public class Region {
     public String toString() {
         return "Region{" +
                "regionIdentificator=" + regionId +
+               " sides= "  + sides +
                '}';
     }
 }

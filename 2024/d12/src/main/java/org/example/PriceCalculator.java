@@ -17,16 +17,15 @@ public class PriceCalculator {
         }
         System.out.println(aggregates);
 
-        HashMap<Character, Integer> mapping = new HashMap<>();
+
         for (Region region : regions) {
-            mapping.merge(region.getRegionId(), region.plots.size(), Integer::sum);
+            System.out.println(region);
+            discountedPrice += region.area * region.sides;
+
         }
 //        System.out.println(mapping);
-        System.out.println(calculator.getSides());
+//        System.out.println(calculator.getSides());
 
-        for (Map.Entry<Character, Integer> entry : mapping.entrySet()) {
-            discountedPrice += calculator.getSides().get(entry.getKey()) * entry.getValue();
-        }
 
 
     }

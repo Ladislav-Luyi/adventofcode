@@ -9,58 +9,36 @@ public class SideCalculator {
 
     public SideCalculator(Garden garden) {
         this.garden = garden;
-        HashSet<Character> uniqIds = new HashSet<>();
+//        HashSet<Character> uniqIds = new HashSet<>();
         List<List<Plot>> plots = garden.getPlots();
-        for (List<Plot> inner : plots) {
-            for (Plot plot : inner) {
-                uniqIds.add(plot.i());
-            }
-
-        }
+//        for (List<Plot> inner : plots) {
+//            for (Plot plot : inner) {
+//                uniqIds.add(plot.i());
+//            }
+//
+//        }
 
         List<Direction> verticalCheck = List.of(Direction.LEFT, Direction.RIGHT);
         List<Direction> horizonalCheck = List.of(Direction.TOP, Direction.BOT);
 
 
-        for (Character id : uniqIds) {
-//         from top down
-
+        for (Region region : garden.regions) {
             for (Direction direction : verticalCheck) {
-                boolean isMatchCounted = true;
-                for (int i = -1; i < plots.get(0).size() + 1; i++) {
-
-                    for (int j = -1; j < plots.size() + 1; j++) {
-
+                for (int i = 0; i < plots.get(0).size(); i++) {
+                    boolean isMatchCounted = true;
+                    for (int j = 0; j < plots.size(); j++) {
                         Optional<Plot> tmp = getPlot(j, i);
                         Plot plot = tmp.orElse(new Plot(j, i, '-'));
-                        System.out.print(plot + " ");
-
-                        if (plot.i() == id) {
+                        if (!region.plots.contains(plot)) {
                             continue;
                         }
-
-                        if (isNextSame(plot, id, Direction.TOP)) {
-                            isMatchCounted = true;
-                        }
-
-                        if (direction.equals(Direction.LEFT)) {
-                            if (!isNextSame(plot, id, Direction.LEFT)) {
-                                isMatchCounted = true;
-                            }
-                        }
-
-                        if (direction.equals(Direction.RIGHT)) {
-                            if (!isNextSame(plot, id, Direction.RIGHT)) {
-                                isMatchCounted = true;
-                            }
-                        }
-
-
-
-                        boolean isMatch = isNextSame(plot, id, direction);
-                        if (isMatch && isMatchCounted) {
-                            sides.merge(id, 1, Integer::sum);
+                        boolean isMatch = isNextSame(plot, region.getRegionId() , direction);
+                        if (!isMatch && isMatchCounted) {
+                            region.sides++;
                             isMatchCounted = false;
+                        }
+                        if (isMatch || !isNextSame(plot, region.getRegionId() , Direction.BOT)){
+                            isMatchCounted = true;
                         }
                     }
                     System.out.println();
@@ -69,47 +47,28 @@ public class SideCalculator {
         }
 
 
-        for (Character id : uniqIds) {
+        for (Region region : garden.regions) {
 
             for (Direction direction : horizonalCheck) {
 
                 // from left to right
-                for (int i = -1; i < plots.size() + 1; i++) {
+                for (int i = 0; i < plots.size(); i++) {
                     boolean isMatchCounted = true;
-                    for (int j = -1; j < plots.get(0).size() + 1; j++) {
+                    for (int j = 0; j < plots.get(0).size(); j++) {
                         Optional<Plot> tmp = getPlot(i, j);
                         Plot plot = tmp.orElse(new Plot(i, j, '-'));
-
-
-                        if (plot.i() == id) {
+                        if (!region.plots.contains(plot)) {
                             continue;
                         }
-
-                        if (isNextSame(plot, id, Direction.RIGHT)) {
-                            isMatchCounted = true;
-                        }
-
-                        if (direction.equals(Direction.TOP)) {
-                            if (!isNextSame(plot, id, Direction.TOP)) {
-                                isMatchCounted = true;
-                            }
-                        }
-
-                        if (direction.equals(Direction.BOT)) {
-                            if (!isNextSame(plot, id, Direction.BOT)) {
-                                isMatchCounted = true;
-                            }
-                        }
-
-
-                        boolean isMatch = isNextSame(plot, id, direction);
-                        if (isMatch && isMatchCounted) {
-                            sides.merge(id, 1, Integer::sum);
+                        boolean isMatch = isNextSame(plot, region.getRegionId() , direction);
+                        if (!isMatch && isMatchCounted) {
+                            region.sides++;
                             isMatchCounted = false;
                         }
-//                        System.out.print(plot + " ");
+                        if (isMatch || !isNextSame(plot, region.getRegionId() , Direction.RIGHT)){
+                            isMatchCounted = true;
+                        }
                     }
-//                    System.out.println();
                 }
             }
 
