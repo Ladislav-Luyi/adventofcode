@@ -21,20 +21,13 @@ public class Main {
                 b = toPair(s);
             }
             if (s.matches(".*Prize:.*")) {
-
+//                // partB
+//                machines.add(new Machine(a, b, toBiggerr(toPair(s))));
+                // partA
                 machines.add(new Machine(a, b, toPair(s)));
             }
         }
         System.out.println(machines);
-
-//        for (int i = 0; i < 80; i ++) {
-//            machines.get(0).pushA();
-//        }
-//
-//        for (int i = 0; i < 40; i ++) {
-//            System.out.println( machines.get(0).pushB());
-//        }
-//        System.out.println(machines.get(0).getTokenPrice());
 
 
         Long sum = machines.stream()
@@ -48,6 +41,20 @@ public class Main {
 
         System.out.println(sum);
 
+    }
+
+    private static Pair toBiggerr(Pair pair) {
+        Long x = pair.x();
+        Long y = pair.y();
+        String s = "10000000000000";
+        x.toString().length();
+
+        String substring = s.substring(0,s.length() - x.toString().length());
+        Long newX = Long.valueOf(  substring + x );
+        substring = s.substring(0,s.length() - y.toString().length());
+        Long newY= Long.valueOf(  substring + y );
+
+        return new Pair(newX, newY);
     }
 
     private static Pair toPair(String s) {
