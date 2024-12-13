@@ -37,13 +37,13 @@ public class Main {
 //        System.out.println(machines.get(0).getTokenPrice());
 
 
-        Integer sum = machines.stream()
+        Long sum = machines.stream()
                 .map(MachineOptimizer::new)
                 .map(MachineOptimizer::getResult)
                 .filter(Result::winAble)
                 .peek(System.out::println)
                 .map(Result::tokens)
-                .reduce(Integer::sum)
+                .reduce(Long::sum)
                 .orElseThrow();
 
         System.out.println(sum);
@@ -56,12 +56,12 @@ public class Main {
         String[] pairS = s1.split(",");
         return new Pair
                 (
-                        Integer.parseInt(
+                        Long.parseLong(
                                 pairS[0]
                                         .replaceAll("\\s+", "")
                                         .replace("X=", "")
                                         .replace("X+", "")),
-                        Integer.parseInt(
+                        Long.parseLong(
                                 pairS[1]
                                         .replaceAll("\\s+", "")
                                         .replace("Y=", "")

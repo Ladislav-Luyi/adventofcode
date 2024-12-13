@@ -7,7 +7,7 @@ public class Machine {
     Pair prize;
     Pair value;
 
-    int tokenPrice = 0;
+    long tokenPrice = 0;
 
     public Machine(Pair a, Pair b, Pair prize) {
         this.a = new Button("a", a, 3);
@@ -54,9 +54,7 @@ public class Machine {
                '}';
     }
 
-    int getTokenPrice(){
-
-
+    long getTokenPrice(){
         return a.tokenPrice + b.tokenPrice;
     }
 }

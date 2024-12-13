@@ -1,4 +1,4 @@
 package org.example;
 
-public record Result(boolean winAble, int tokens ) {
+public record Result(boolean winAble, long tokens ) {
 }

@@ -4,9 +4,9 @@ public class Button {
 
     String id;
     Pair xy;
-    int counter = 0;
+    long counter = 0;
 
-    int tokenCounter, tokenPrice;
+    long tokenCounter, tokenPrice;
 
     public Button(String id, Pair xy, int tokenCounter) {
         this.id = id;

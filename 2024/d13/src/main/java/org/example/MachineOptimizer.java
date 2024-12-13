@@ -10,7 +10,7 @@ public class MachineOptimizer {
     public MachineOptimizer(Machine machine) {
         this.machine = machine;
 
-        HashSet<Integer> tokens = new HashSet<>();
+        HashSet<Long> tokens = new HashSet<>();
 
         // increase
         while(true){
@@ -26,7 +26,7 @@ public class MachineOptimizer {
         }
 
 
-        int pushCounter = 0;
+        long pushCounter = 0;
         // decrease
         while(true){
             boolean b1 = machine.dePushA();
@@ -43,7 +43,7 @@ public class MachineOptimizer {
                 }
             }
             //reset
-            for (int i = 0; i < pushCounter; i++){
+            for (long i = 0; i < pushCounter; i++){
                 boolean b = machine.dePushB();
                 if (b) {
                     System.out.println(machine.a.counter + " " + machine.b.counter);
@@ -58,62 +58,10 @@ public class MachineOptimizer {
                 break;
             }
         }
-//         reset both
-//        while (machine.b.tokenPrice != 0){
-//            machine.dePushB();
-//        }
-//
-//        while (machine.a.tokenPrice != 0){
-//            machine.dePushA();
-//        }
-//
-//
-//        while(true){
-//            boolean b = machine.pushB();
-//            if (b){
-//                System.out.println(machine.a.xy + " " + machine.b.xy);
-//                tokens.add(machine.getTokenPrice());
-//            }
-//            if (machine.value.x() > machine.prize.x() && machine.value.y() > machine.prize.y()){
-//                break;
-//            }
-//        }
-//
-//
-//        pushCounter = 0;
-//        // decrease
-//        while(true){
-//            boolean b1 = machine.dePushB();
-//            while (true) {
-//                if (machine.value.x() > machine.prize.x() && machine.value.y() > machine.prize.y()){
-//                    break;
-//                }
-//                boolean b2 = machine.pushA();
-//                pushCounter++;
-//                if (b2) {
-//                    System.out.println(machine.a.xy + " " + machine.b.xy);
-//                    tokens.add(machine.getTokenPrice());
-//                }
-//            }
-//            //reset
-//            for (int i = 0; i < pushCounter; i++){
-//                boolean b = machine.dePushA();
-//                if (b) {
-//                    System.out.println(machine.a.xy + " " + machine.b.xy);
-//                    tokens.add(machine.getTokenPrice());
-//                }
-//            }
-//            pushCounter=0;
-////            System.out.println(machine.value + " " +machine.a.tokenPrice);
-////            System.out.println(machine.value + " " +machine.b.tokenPrice);
-//            if (machine.a.tokenPrice == 0){
-//                break;
-//            }
-//        }
 
         result =  new Result(
                 !tokens.isEmpty(),
-                tokens.stream().min(Comparator.naturalOrder()).orElse(-1));
+                tokens.stream().min(Comparator.naturalOrder()).orElse(-1L));
     }
 
     Result getResult(){
