@@ -27,8 +27,17 @@ public class Main {
                 machines.add(new Machine(a, b, toPair(s)));
             }
         }
-        System.out.println(machines);
+        System.out.println(machines.get(0));
+//        machines.get(0).pushMagicAButton();
+//        System.out.println(machines.get(0));
+//        System.out.println(machines.get(0).a.counter);
 
+//        for (int i = 0; i < 89; i++){
+//            machines.get(0).pushA();
+//        }
+                System.out.println(machines.get(0));
+        System.out.println(machines.get(0).a.counter);
+        System.out.println(machines.get(0).a.tokenPrice);
 
         Long sum = machines.stream()
                 .map(MachineOptimizer::new)

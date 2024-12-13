@@ -12,16 +12,22 @@ public class MachineOptimizer {
 
         HashSet<Long> tokens = new HashSet<>();
 
+
+        if (machine.pushMagicAButton()){
+            tokens.add(machine.getTokenPrice());
+        }
+        System.out.println(machine);
         // increase
         while(true){
+            if (machine.value.x() > machine.prize.x() || machine.value.y() > machine.prize.y()){
+                break;
+            }
+            System.out.println("true");
             boolean b = machine.pushA();
             if (b){
                 System.out.println(machine.a.counter + " " + machine.b.counter);
                 System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
                 tokens.add(machine.getTokenPrice());
-            }
-            if (machine.value.x() > machine.prize.x() && machine.value.y() > machine.prize.y()){
-                break;
             }
         }
 
@@ -31,7 +37,7 @@ public class MachineOptimizer {
         while(true){
             boolean b1 = machine.dePushA();
             while (true) {
-                if (machine.value.x() > machine.prize.x() && machine.value.y() > machine.prize.y()){
+                if (machine.value.x() > machine.prize.x() || machine.value.y() > machine.prize.y()){
                     break;
                 }
                 boolean b2 = machine.pushB();
@@ -43,17 +49,20 @@ public class MachineOptimizer {
                 }
             }
             //reset
-            for (long i = 0; i < pushCounter; i++){
-                boolean b = machine.dePushB();
-                if (b) {
-                    System.out.println(machine.a.counter + " " + machine.b.counter);
-                    System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
-                    tokens.add(machine.getTokenPrice());
-                }
+//            for (long i = 0; i < pushCounter; i++){
+//                boolean b = machine.dePushB();
+//                if (b) {
+//                    System.out.println(machine.a.counter + " " + machine.b.counter);
+//                    System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
+//                    tokens.add(machine.getTokenPrice());
+//                }
+//            }
+            if (machine.dePushMagicBButton(pushCounter)) {
+                System.out.println(machine.a.counter + " " + machine.b.counter);
+                System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
+                tokens.add(machine.getTokenPrice());
             }
             pushCounter=0;
-//            System.out.println(machine.value + " " +machine.a.tokenPrice);
-//            System.out.println(machine.value + " " +machine.b.tokenPrice);
             if (machine.a.tokenPrice == 0){
                 break;
             }

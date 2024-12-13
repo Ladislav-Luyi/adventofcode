@@ -33,4 +33,11 @@ public class Button {
                ", xy=" + xy +
                '}';
     }
+
+    public void override(long tokenPrice, long counter){
+        this.tokenPrice = tokenPrice;
+        this.counter = counter;
+
+    }
+
 }
