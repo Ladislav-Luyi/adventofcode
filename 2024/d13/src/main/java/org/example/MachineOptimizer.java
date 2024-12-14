@@ -22,11 +22,11 @@ public class MachineOptimizer {
             if (machine.value.x() > machine.prize.x() || machine.value.y() > machine.prize.y()){
                 break;
             }
-            System.out.println("true");
+//            System.out.println("true");
             boolean b = machine.pushA();
             if (b){
-                System.out.println(machine.a.counter + " " + machine.b.counter);
-                System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
+//                System.out.println(machine.a.counter + " " + machine.b.counter);
+//                System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
                 tokens.add(machine.getTokenPrice());
             }
         }
@@ -34,32 +34,35 @@ public class MachineOptimizer {
 
         long pushCounter = 0;
         // decrease
+        boolean pushCounterAllowed = true;
         while(true){
             boolean b1 = machine.dePushA();
+//            System.out.println("dePush");
             while (true) {
                 if (machine.value.x() > machine.prize.x() || machine.value.y() > machine.prize.y()){
+                    pushCounterAllowed = true;
                     break;
                 }
-                boolean b2 = machine.pushB();
-                pushCounter++;
-                if (b2) {
-                    System.out.println(machine.a.counter + " " + machine.b.counter);
-                    System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
+//                System.out.println("push = " + machine.value );
+//                System.out.println("a " + machine.a.counter );
+//                System.out.println("b " + machine.b.counter );
+                if (pushCounterAllowed){
+                    pushCounter += machine.multiPushBButton();
+                    pushCounterAllowed = false;
+                }else {
+                    machine.pushB();
+                    pushCounter++;
+                }
+
+                if (machine.isWin()) {
+//                    System.out.println(machine.a.counter + " " + machine.b.counter);
+//                    System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
                     tokens.add(machine.getTokenPrice());
                 }
             }
-            //reset
-//            for (long i = 0; i < pushCounter; i++){
-//                boolean b = machine.dePushB();
-//                if (b) {
-//                    System.out.println(machine.a.counter + " " + machine.b.counter);
-//                    System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
-//                    tokens.add(machine.getTokenPrice());
-//                }
-//            }
             if (machine.dePushMagicBButton(pushCounter)) {
-                System.out.println(machine.a.counter + " " + machine.b.counter);
-                System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
+//                System.out.println(machine.a.counter + " " + machine.b.counter);
+//                System.out.println(machine.a.tokenPrice + " " + machine.b.tokenPrice);
                 tokens.add(machine.getTokenPrice());
             }
             pushCounter=0;

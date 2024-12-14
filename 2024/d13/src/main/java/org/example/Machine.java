@@ -41,7 +41,7 @@ public class Machine {
         return value.x() == prize.x() && value.y() == prize.y();
     }
 
-    private Pair sumPairs(Pair a, Pair b){
+    public Pair sumPairs(Pair a, Pair b){
         return new Pair(a.x() + b.x(), a.y() + b.y());
     }
 
@@ -64,6 +64,18 @@ public class Machine {
         Pair xy = a.xy;
         overloadPushes(xy, a);
         return areEqual(value,prize);
+    }
+
+    public long multiPushBButton(){
+        Pair minusValue = new Pair( -value.x(), -value.y());
+        Pair delta = sumPairs(prize, minusValue);
+        long l1 =  delta.x() /  b.xy.x();
+        long l2 =  delta.y() /  b.xy.y();
+        long min = Math.min(l1, l2);
+        Pair v = new Pair(b.xy.x() * min, b.xy.y() * min);
+        b.override(min * b.tokenCounter, min);
+        value = sumPairs(v, value);
+        return min;
     }
 
     public boolean dePushMagicBButton(long times){
@@ -117,4 +129,9 @@ public class Machine {
             return pushMagicBButton();
         }
     }
+
+    boolean isWin(){
+        return areEqual(value,prize);
+    }
+
 }

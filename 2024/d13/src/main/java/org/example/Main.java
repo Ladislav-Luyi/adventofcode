@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.EquationSolver.getB;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -28,27 +30,38 @@ public class Main {
             }
         }
         System.out.println(machines.get(0));
+
+        machines.stream()
+                .forEach(e -> System.out.println( getB(e.a.xy.y(), e.a.xy.x(), e.prize.x(), e.b.xy.x(),e.b.xy.y() , e.prize.y() ).intValue()));
+
+//        machines.stream()
+//                .forEach(e ->  getB(e.a.xy.y(), e.a.xy.x(), e.prize.x(), e.b.xy.x(),e.b.xy.y() , e.prize.y() ).intValue()));
+
 //        machines.get(0).pushMagicAButton();
 //        System.out.println(machines.get(0));
 //        System.out.println(machines.get(0).a.counter);
 
-//        for (int i = 0; i < 89; i++){
+//        for (int i = 0; i < 80; i++){
 //            machines.get(0).pushA();
 //        }
-                System.out.println(machines.get(0));
-        System.out.println(machines.get(0).a.counter);
-        System.out.println(machines.get(0).a.tokenPrice);
+//        System.out.println(machines.get(0));
+//        System.out.println(machines.get(0).a.counter);
+//        System.out.println(machines.get(0).a.tokenPrice);
+//        System.out.println(machines.get(0).multiPushBButton());
+//        System.out.println(machines.get(0));
+//        System.out.println(machines.get(0).b.counter);
+//        System.out.println(machines.get(0).b.tokenPrice);
 
-        Long sum = machines.stream()
-                .map(MachineOptimizer::new)
-                .map(MachineOptimizer::getResult)
-                .filter(Result::winAble)
-                .peek(System.out::println)
-                .map(Result::tokens)
-                .reduce(Long::sum)
-                .orElseThrow();
-
-        System.out.println(sum);
+//        Long sum = machines.stream()
+//                .map(MachineOptimizer::new)
+//                .map(MachineOptimizer::getResult)
+//                .filter(Result::winAble)
+//                .peek(System.out::println)
+//                .map(Result::tokens)
+//                .reduce(Long::sum)
+//                .orElseThrow();
+//
+//        System.out.println(sum);
 
     }
 
