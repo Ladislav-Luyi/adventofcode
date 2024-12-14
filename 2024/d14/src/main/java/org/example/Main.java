@@ -17,11 +17,13 @@ public class Main {
 //        Pair dir = new Pair(-3,2);
 //        Pair location  = new Pair(4,2);
 //        Robot robot = new Robot(location, dir, area);
-        // 241610460 too high
+
+
+
         List<String> strings = loadFile("input");
         List<Robot> robots = new ArrayList<>();
         Pattern p = Pattern.compile("p=(-?\\w+),(-?\\w+) v=(-?\\w+),(-?\\w+)");
-        Pair area = new Pair(7,11);
+        Pair area = new Pair(103,101);
         for (String string : strings) {
             Matcher m = p.matcher(string);
             m.find();
@@ -29,15 +31,15 @@ public class Main {
             Pair location  = new Pair(Integer.parseInt( m.group(2)),Integer.parseInt( m.group(1)));
             robots.add(new Robot(location, dir, area));
         }
-
+        robots.forEach(e -> System.out.println(e.getQuadrant()) );
 
         for (int i = 0; i < 100; i++){
-//            showStatus(area, robots);
             robots.forEach(Robot::move);
+            showStatus(area, robots);
         }
 
 
-        robots.forEach(System.out::println);
+//        robots.forEach(System.out::println);
 
         HashMap<Integer, Integer> map = new HashMap<>();
         robots.stream()
@@ -48,6 +50,7 @@ public class Main {
             System.out.println(entry.getValue());
             sum *= entry.getValue();
         }
+        System.out.println(map);
         System.out.println(sum);
 
     }

@@ -70,7 +70,7 @@ public class Robot {
     boolean amIinMiddle(){
         int r = area.x() / 2;
         int c = area.y() / 2;
-        return location.x() == r && location.y() == c;
+        return location.x() == r || location.y() == c;
     }
 
     int getQuadrant(){
@@ -80,14 +80,18 @@ public class Robot {
         if (amIinMiddle()){
             return -1;
         }
-        boolean isUpperQuadrant = location.x() < r;
-        boolean isLeftQuadrant = location.y() < c;
+        System.out.println(location.x());
+        boolean isUpperQuadrant = location.x()  < r;
+        System.out.println(isUpperQuadrant);
+        boolean isLeftQuadrant = location.y()  < c;
+        System.out.println(c);
+        System.out.println(location.y());
 
         if (isUpperQuadrant && isLeftQuadrant){
             return 1;
-        }else if (isUpperQuadrant){
+        }else if (isUpperQuadrant && !isLeftQuadrant){
             return 2;
-        }else if (isLeftQuadrant){
+        }else if (!isUpperQuadrant && isLeftQuadrant){
             return 3;
         }else{
             return 4;
