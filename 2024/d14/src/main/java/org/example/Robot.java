@@ -80,12 +80,8 @@ public class Robot {
         if (amIinMiddle()){
             return -1;
         }
-        System.out.println(location.x());
         boolean isUpperQuadrant = location.x()  < r;
-        System.out.println(isUpperQuadrant);
         boolean isLeftQuadrant = location.y()  < c;
-        System.out.println(c);
-        System.out.println(location.y());
 
         if (isUpperQuadrant && isLeftQuadrant){
             return 1;
