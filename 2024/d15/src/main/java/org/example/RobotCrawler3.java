@@ -61,18 +61,29 @@ public class RobotCrawler3 {
             goInDirection(robotPosition, someDirection, result);
             Optional<Pair> isDot = result.stream().filter(pair -> area1.getArea().get(pair.r()).get(pair.c()).equals('.')).findAny();
             if (isDot.isPresent()) {
-                List<Pair> tmpResultOuter = new ArrayList<>();
+                HashSet<Pair> tmpResultOuter = new HashSet<>();
                 if (someDirection.equals('^') || someDirection.equals('v')) {
-                    for (Pair pair : result) {
+                    Queue<Pair> queue = new ArrayDeque<>(result);
+                    HashSet<Pair> processed = new HashSet<>();
+                    while (!queue.isEmpty()) {
+                        Pair pair = queue.poll();
+                        if (processed.contains(pair)){
+                            continue;
+                        }
+                        processed.add(pair);
                         List<Pair> tmpResult = new ArrayList<>();
                         Character c = area1.getArea().get(pair.r()).get(pair.c());
                         if (c.equals('[')) {
                             goInDirection(new Pair(pair.r(), pair.c() + 1), someDirection, tmpResult);
+                            System.out.println(tmpResult);
+                            queue.addAll(tmpResult);
                         } else if (c.equals(']')) {
                             goInDirection(new Pair(pair.r(), pair.c() - 1), someDirection, tmpResult);
+                            queue.addAll(tmpResult);
                         } else {
                             continue;
                         }
+
                         Optional<Pair> isDot2 = tmpResult.stream().filter(e -> area1.getArea().get(e.r()).get(e.c()).equals('.')).findAny();
                         if (isDot2.isEmpty()) {
                             continue outer;
@@ -86,7 +97,7 @@ public class RobotCrawler3 {
                 moveEveryNodeInDirectionAndSetRobotNodePosition(result, someDirection);
             }
             result.clear();
-            area1.show();
+//            area1.show();
         }
     }
 

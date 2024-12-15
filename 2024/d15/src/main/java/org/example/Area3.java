@@ -52,16 +52,13 @@ public class Area3 {
     public int sumOfCoordinates() {
         int sum = 0;
 
-        boolean isCounted = true;
         for (int i = 0; i < list.size(); i++) {
             List<Character> characters = list.get(i);
             for (int j = 0; j < characters.size(); j++) {
                 Character character = characters.get(j);
-                if (character.equals('|') && isCounted) {
+                if (character.equals('[')) {
+                    System.out.println(i + " " + j);
                     sum += 100 * i + j;
-                    isCounted = false;
-                } else {
-                    isCounted = true;
                 }
             }
         }
