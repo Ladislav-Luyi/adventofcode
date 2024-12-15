@@ -51,7 +51,7 @@ public class RobotCrawler1 {
     }
 
     public void run() {
-        area1.show();
+//        area1.show();
         // add all directions to queue
         while (!moves.isEmpty()) {
             Character someDirection = moves.poll();

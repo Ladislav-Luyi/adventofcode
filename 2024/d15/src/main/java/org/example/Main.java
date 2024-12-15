@@ -28,16 +28,16 @@ public class Main {
     }
 
     private static void part2() {
-        Area3 area3 =  new Area3(loadFile("area"));
+        Area2 area2 =  new Area2(loadFile("area"));
         Queue<Character> queue = new ArrayDeque<>();
         for (String lines : loadFile("directions")) {
             for (String s : lines.split("")) {
                 queue.add(s.charAt(0));
             }
         }
-        RobotCrawler3 robotCrawler3 = new RobotCrawler3(area3, queue);
-        robotCrawler3.run();
-        System.out.println(area3.sumOfCoordinates());
+        RobotCrawler2 robotCrawler2 = new RobotCrawler2(area2, queue);
+        robotCrawler2.run();
+        System.out.println(area2.sumOfCoordinates());
     }
 
 
