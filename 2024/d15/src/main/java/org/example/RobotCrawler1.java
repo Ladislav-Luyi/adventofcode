@@ -2,15 +2,15 @@ package org.example;
 
 import java.util.*;
 
-public class RobotCrawler {
+public class RobotCrawler1 {
 
-    private final Area area;
+    private final Area1 area1;
     Queue<Character> moves;
     private Pair robotPosition;
 
-    public RobotCrawler(Area area, Queue<Character> moves) {
-        this.area = area;
-        List<List<Character>> areaArea = area.getArea();
+    public RobotCrawler1(Area1 area1, Queue<Character> moves) {
+        this.area1 = area1;
+        List<List<Character>> areaArea = area1.getArea();
         for (int i = 0; i < areaArea.size(); i++) {
             List<Character> list = areaArea.get(i);
             for (int j = 0; j < list.size(); j++) {
@@ -28,7 +28,7 @@ public class RobotCrawler {
     public Pair getNextMove(Pair p, Character d) {
         int row = p.r();
         int col = p.c();
-        List<List<Character>> a = area.getArea();
+        List<List<Character>> a = area1.getArea();
         // quick hacks
         try {
             if (d.equals('^')) {
@@ -51,13 +51,13 @@ public class RobotCrawler {
     }
 
     public void run() {
-        area.show();
+        area1.show();
         // add all directions to queue
         while (!moves.isEmpty()) {
             Character someDirection = moves.poll();
             List<Pair> result = new ArrayList<>();
             goInDirection(robotPosition, someDirection, result);
-            Optional<Pair> isDot = result.stream().filter(pair -> area.getArea().get(pair.r()).get(pair.c()).equals('.')).findAny();
+            Optional<Pair> isDot = result.stream().filter(pair -> area1.getArea().get(pair.r()).get(pair.c()).equals('.')).findAny();
             if (isDot.isPresent()) {
                 moveEveryNodeInDirectionAndSetRobotNodePosition(result, someDirection);
             }
@@ -71,13 +71,13 @@ public class RobotCrawler {
         for (Pair pair : input) {
             int row = pair.r();
             int col = pair.c();
-            Character current = area.getArea().get(pair.r()).get(pair.c());
+            Character current = area1.getArea().get(pair.r()).get(pair.c());
             boolean isMove = true;
             if (current.equals('.')){
                 isMove = false;
             }
             Character newValue = current == '@' ? '@' : 'O';
-            area.getArea().get(pair.r()).set(pair.c(), '.');
+            area1.getArea().get(pair.r()).set(pair.c(), '.');
             Pair newPair = null;
             if (!isMove){
                 continue;
@@ -91,7 +91,7 @@ public class RobotCrawler {
             } else {
                 newPair = new Pair(row, col - 1);
             }
-            area.getArea().get(newPair.r()).set(newPair.c(), newValue);
+            area1.getArea().get(newPair.r()).set(newPair.c(), newValue);
             if (newValue.equals('@')){
                 robotPosition = newPair;
             }
@@ -103,7 +103,7 @@ public class RobotCrawler {
         if (pair == null) {
             return;
         }
-        Character current = area.getArea().get(pair.r()).get(pair.c());
+        Character current = area1.getArea().get(pair.r()).get(pair.c());
         if (current.equals('#')) {
             return;
         }

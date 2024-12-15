@@ -3,10 +3,10 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Area {
+public class Area1 {
     private final List<List<Character>> list;
 
-    public Area(List<String> input) {
+    public Area1(List<String> input) {
         List<List<Character>> list = new ArrayList<>();
         for (String lines : input) {
             List<Character> chars = new ArrayList<>();

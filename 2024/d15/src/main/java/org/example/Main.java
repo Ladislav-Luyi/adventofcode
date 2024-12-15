@@ -8,16 +8,16 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Area area = new Area(loadFile("area"));
+        Area1 area1 = new Area1(loadFile("area"));
         Queue<Character> queue = new ArrayDeque<>();
         for (String lines : loadFile("directions")) {
             for (String s : lines.split("")) {
                 queue.add(s.charAt(0));
             }
         }
-        RobotCrawler robotCrawler = new RobotCrawler(area, queue);
-        robotCrawler.run();
-        System.out.println(area.sumOfCoordinates());
+        RobotCrawler1 robotCrawler1 = new RobotCrawler1(area1, queue);
+        robotCrawler1.run();
+        System.out.println(area1.sumOfCoordinates());
 
     }
 
