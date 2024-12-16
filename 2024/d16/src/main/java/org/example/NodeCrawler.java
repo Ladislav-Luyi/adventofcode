@@ -117,7 +117,8 @@ public class NodeCrawler {
             }
         }
 
-        return new ArrayList<>( list.stream().filter(move -> move.n().i() != '#').toList());
+        return new ArrayList<>( list.stream().filter(move -> area.getNodes().get(move.n().r()).get(move.n().c()).i() != '#').toList());
+
     }
 
     private Integer getPoints(Direction currentDirection,
@@ -168,7 +169,7 @@ public class NodeCrawler {
         }
 
         List<Move> nextMoves = getNextMoves(start);
-        nextMoves.sort(new ScoreComparator());
+//        nextMoves.sort(new ScoreComparator());
         for (Move m : nextMoves) {
             Node next = m.n();
             if (visited[next.r()][next.c()]) {
