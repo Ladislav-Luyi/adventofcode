@@ -142,29 +142,21 @@ public class NodeCrawler {
 
 
     public void run() {
-        Set<Integer> scores = new HashSet<>();
-        processTree(current, scores, 0);
-        System.out.println(scores);
-        System.out.println( scores.stream().min(Comparator.naturalOrder()).orElseThrow() );
+        processTree(current, 0);
+        System.out.println(minPoints);
     }
 
 
-
-        private void processTree(Node start, Set<Integer> scores, Integer points) {
-//        System.out.println(start);
-//        if (visited[start.r()][start.c()]) {
-//            return;
-//        }
-//        counter++;
-//        if (scores.size() == 3){
-//            System.out.println(scores);
-////            return;
-//        }
-//        area.getNodes().get(start.r()).get(start.c()).setI('S');
-//        area.showTrial();
+        static int minPoints = Integer.MAX_VALUE;
+        private void processTree(Node start, Integer points) {
         visited[start.r()][start.c()] = true;
+        if (points > minPoints){
+            return;
+        }
         if (start.c() == finish.c() && start.r() == finish.r()) {
-            scores.add(points);
+            if (points < minPoints){
+                minPoints = points;
+            }
             return;
         }
 
@@ -175,7 +167,7 @@ public class NodeCrawler {
             if (visited[next.r()][next.c()]) {
                 continue;
             }
-            processTree(next, scores, points + m.points());
+            processTree(next, points + m.points());
             visited[next.r()][next.c()] = false;
         }
 //            visited[start.r()][start.c()] = false;
