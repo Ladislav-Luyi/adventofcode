@@ -1,44 +1,77 @@
 package org.example;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-    static HashMap<Character, Integer> reg = new HashMap<>();
-    static StringBuilder sb = new StringBuilder();
+    static HashMap<Character, Long> reg = new HashMap<>();
     public static void main(String[] args) {
 
-        // not 0,0,0,0,0,0,0,0,0
-        reg.putIfAbsent('A', 60589763);
-        reg.putIfAbsent('B', 0);
-        reg.putIfAbsent('C', 0);
+        reg.putIfAbsent('A', 0L);
+        reg.putIfAbsent('B', 0L);
+        reg.putIfAbsent('C', 0L);
 
-        List<Integer> program = List.of(2,4,1,5,7,5,1,6,4,1,5,5,0,3,3,0);
-//        List<Integer> program = List.of(0,1,5,4,3,0);
+        List<Integer> input = List.of(0,3,5,4,3,0);
+        List<Long> program = input.stream().map(Long::valueOf).collect(Collectors.toList());
+
+        long counter = 0;
+        while (true){
+            reg.put('A', counter);
+            List<Long> result = calculate(program);
+            if ( result.size() == program.size() && arePartiallyEqual(result, program) ){
+                break;
+            }
+            counter++;
+        }
+        System.out.println(counter);
+
+
+    }
+
+    static boolean arePartiallyEqual(List<Long> smaller, List<Long> bigger){
+        for (int i = 0; i < smaller.size(); i++) {
+            Long l1 = smaller.get(i);
+            Long l2 = bigger.get(i);
+            if (!l1.equals(l2)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static List<Long> calculate(List<Long> program) {
+        List<Long> longs = new ArrayList<>();
 
         int counter = 0;
-//        int j = 1;
-//        while (j < program.size()){
-        for (int j = 1; j < program.size(); j = j + 2) {
-            if (counter > 20){
-//                break;
+        for (long j = 1; j < program.size(); j = j + 2) {
+            if (!arePartiallyEqual(longs, program)){
+                return longs;
             }
-//            System.out.println(j);
 
-//            System.out.println("performing ins" + program.get( j - 1 ));
 
-            int instruction = program.get( j - 1 );
-            int operand = getNext(program.get( j  ));
-//            System.out.println("performing operand " + operand);
+            if (j > Integer.MAX_VALUE - 2){
+                System.out.println("j big number " + j);
+            }
+            if (counter > 1000000){
+                System.out.println("counter big number");
+            }
+            if (counter > 10000000){
+                break;
+            }
+
+            long instruction = program.get((int) (j - 1));
+            long operand = getNext(program.get((int) j));
             if (instruction == 0){
                 adv(operand);
             }else
             if (instruction == 1){
-                bxl(program.get(j));
+                bxl(program.get((int) j));
             }else
             if (instruction == 2){
                 bst(operand);
@@ -47,7 +80,7 @@ public class Main {
                 bxc(operand);
             }else
             if (instruction == 5){
-                out(operand);
+                out(operand, longs);
             }else
             if (instruction == 6){
                 bdv(operand);
@@ -60,29 +93,18 @@ public class Main {
                 //TODO the instruction pointer is not increased by 2 after this instruction
                 if (reg.get('A') == 0){
                 }else {
-                    System.out.println("before update " + program.get(j));
-                    //TODO is this OK?
-                    j = program.get(j) - 1;
+                    j = program.get((int) j) - 1;
                 }
             }
             else {
-                new RuntimeException();
+                throw new RuntimeException();
             }
             counter++;
-            System.out.println(sb);
-//            j+=2;
         }
-
-        System.out.println(reg);
-
-        System.out.println(sb);
-
-
-
-
+        return longs;
     }
 
-    static int getNext(int i) {
+    static long getNext(long i) {
         if (i >= 0 && i < 4) {
             return i;
         }
@@ -96,76 +118,52 @@ public class Main {
         } else {
             // TODO this is 7, it is not matching instructions
             return  i;
-//            throw new RuntimeException();
         }
         return reg.get(ch);
     }
 
-    static void adv(int i){
-//        System.out.println("i "+ i);
-        int numerator = reg.get('A');
+    static void adv(long i){
+        long numerator = reg.get('A');
         double denominator  = Math.pow(2,i);
-//        System.out.println("denominator " + denominator);
-        int r = numerator / (int) denominator;
-//        System.out.println("value " + r);
-        System.out.println("ADV " + reg);
-        System.out.println(numerator + " / " + denominator + " = " + r);
+        long r = numerator / (int) denominator;
         reg.put('A', r);
-        System.out.println("ADV " + reg);
     }
 
-    static void bxl(int i){
-        int a = reg.get('B');
-        int r = a ^ i;
-        System.out.println("bxl " + reg);
-        System.out.println(a + " ^ " + i + " = " + r);
+    static void bxl(long i){
+        long a = reg.get('B');
+        long r = a ^ i;
         reg.put('B', r);
-        System.out.println("bxl " + reg);
     }
 
-    // (thereby keeping only its lowest 3 bits) ??
-    static void bst(int i){
-        int r = i % 8;
-        System.out.println("bst " + reg);
-        System.out.println(i + " % 8 = " + r);
+    static void bst(long i){
+        long r = i % 8;
         reg.put('B', r);
-        System.out.println("bst " + reg);
     }
 
-    static void bxc(int i){
-        int b = reg.get('B');
-        int c = reg.get('C');
-        int r = b ^ c;
-        System.out.println("bxc " + reg);
-        System.out.println(b + " ^ " + c + " = " + r);
+    static void bxc(long i){
+        long b = reg.get('B');
+        long c = reg.get('C');
+        long r = b ^ c;
         reg.put('B', r);
-        System.out.println("bxc " + reg);
     }
 
-    static void out(int i){
-        int r = i % 8;
-
-        sb.append(r + ",");
+    static void out(long i, List<Long> longs){
+        long r = i % 8;
+        longs.add(r);
     }
 
-    static void bdv(int i){
-        int numerator = reg.get('A');
+    static void bdv(long i){
+        long numerator = reg.get('A');
         double denominator  = Math.pow(2,i);
-        int r = numerator / (int) denominator;
-        System.out.println("bdv " + reg);
-        System.out.println(numerator + " / " + denominator + " = " + r);
+        long r = numerator / (long) denominator;
         reg.put('B', r);
-        System.out.println("bdv " + reg);
     }
 
-    static void cdv(int i){
-        int numerator = reg.get('A');
+    static void cdv(long i){
+        long numerator = reg.get('A');
         double denominator  = Math.pow(2,i);
-        int r = numerator / (int) denominator;
-        System.out.println("bdv " + reg);
-        System.out.println(numerator + " / " + denominator + " = " + r);
+        long r = numerator / (long) denominator;
         reg.put('C', r);
-        System.out.println("bdv " + reg);
     }
 
 
